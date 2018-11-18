@@ -1,17 +1,25 @@
 {
     "name": "EmailPoubelle",
     "id": "emailpoubelle",
+    "packaging_format": 1,
     "description": {
         "en": "Create throwable email address redirected to your real one",
         "fr": "Créez des adresses email jetables qui redirigent les mails vers votre adresse réelle"
     },
-    "developer": {
-        "name": "David Mercereau",
-        "email": "david@mercereau.info",
-        "url": "https://framagit.org/kepon/emailPoubellePhp/"
-    },
+    "url": "https://framagit.org/kepon/emailPoubellePhp/",
+    "version": "2.0~ynh1",
     "multi_instance": "false",
     "license": "Beerware",
+    "maintainer": {
+        "name": "krakinou",
+        "email": "misterl56@hotmail.com"
+    },
+    "services": [
+        "nginx",
+        "mysql",
+        "dovecot",
+        "postfix"
+    ],
     "arguments": {
         "install" : [
             {
