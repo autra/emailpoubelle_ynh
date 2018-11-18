@@ -11,6 +11,8 @@ Of course, once uninstalled, everything get back to normal.
 
 TODO : 
 ------
+In process : move to 2.0
+
 Test it ! (and check if that doesn't interfer with postfix and its aliases)
 
 Test Translate !
