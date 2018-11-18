@@ -8,7 +8,7 @@
     "developer": {
         "name": "David Mercereau",
         "email": "david@mercereau.info",
-        "url": "http://www.mercereau.info/sortie-de-la-version-1-0-demailpoubelle-php-email-jetable-auto-hebergeable/"
+        "url": "https://framagit.org/kepon/emailPoubellePhp/"
     },
     "multi_instance": "false",
     "license": "Beerware",
