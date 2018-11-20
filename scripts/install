@@ -33,7 +33,7 @@ fi
 ynh_webpath_register $app $domain $path
 
 # Check user
-sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
+ynh_user_exists "$admin"
 if [[ ! $? -eq 0 ]]; then
 echo "Wrong user"
 exit 1
@@ -65,8 +65,9 @@ sudo sed -i "s@motdepassedefou@$db_pwd@g" $final_path/conf.php
 #setting conf file not world-readable (dude, there is a plain-text password !)
 sudo chmod o-r $final_path/conf.php
 
-#initialize database
-sudo yunohost app initdb $db_user -p $db_pwd
+#initialize database (databasename = db_user)
+ynh_mysql_create_db $db_user $db_user $db_pwd 
+#sudo yunohost app initdb $db_user -p $db_pwd
 
 #setting postfix to use virtual aliases file
 sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
