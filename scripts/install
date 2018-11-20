@@ -1,7 +1,15 @@
 #!/bin/bash
-# Write all logs to file
-#exec > >(tee /tmp/emailpoubelle.log)
-#exec 2>&1
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+
 app=emailpoubelle
 
 # Retrieve arguments
