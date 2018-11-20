@@ -15,11 +15,14 @@ postfix=/etc/postfix/main.cf
 
 cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 
-# Check domain/path availability
-sudo yunohost app checkurl $domain$path -a $app
+# Check web path availability
+ynh_webpath_available $domain $path
+#sudo yunohost app checkurl $domain$path -a $app
 if [[ ! $? -eq 0 ]]; then
 exit 1
 fi
+# Register (book) web path
+ynh_webpath_register $app $domain $path
 
 # Check user
 sudo yunohost user list --json | grep -q "\"username\": \"$admin\""
