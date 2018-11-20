@@ -1,12 +1,17 @@
 #!/bin/bash
 
+source _common.sh
+source /usr/share/yunohost/helpers
+
+
 db_user=emailPoubelle
 db_name=$db_user
 root_pwd=$(sudo cat /etc/yunohost/mysql)
 domain=$(sudo yunohost app setting emailpoubelle domain)
 postfix=/etc/postfix/main.cf
+
 #removing emailpoubelle database
-sudo mysql -u root -p$root_pwd -e "DROP DATABASE $db_name ; DROP USER $db_user@localhost ;"
+ynh_mysql_remove_db $db_user $db_name
 #removing emailpoubelle directory
 sudo rm -rf /var/www/emailpoubelle
 #removing nginx conf
