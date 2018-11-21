@@ -24,16 +24,16 @@ define('DEBUG', false);
 define('DOMAIN', 'exemple.fr');
 //define('DOMAIN', 'exemple.com;zici.fr;exemple.fr');
 // Nombre d'alias poubelle limite par email
-define('ALIASLIMITBYMAIL', 30);
+//define('ALIASLIMITBYMAIL', 30);
 
 // PDO stucture
 // Exemple pour MYSQL : 
-//      define('DB', 'mysql:host=127.0.0.1;dbname=baseMysql');
-//      define('DBUSER', 'utilisateurMysql');
-//      define('DBPASS', 'motdepassedefou');
+      define('DB', 'mysql:host=127.0.0.1;dbname=emailPoubelle');
+      define('DBUSER', 'emailPoubelle');
+      define('DBPASS', 'motdepassedefou');
 // Exemple pour Sqlite : 
 //      define('DB', 'sqlite:./data/emailPoubelle.sqlite');
-define('DB', 'sqlite:'.DATA.'/database.sdb');
+//define('DB', 'sqlite:'.DATA.'/database.sdb');
 // table prefix
 define('DBTABLEPREFIX', 'ep_');
 
