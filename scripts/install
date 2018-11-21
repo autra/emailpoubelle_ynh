@@ -43,6 +43,13 @@ fi
 sudo yunohost app setting $app admin -v "$admin"
 sudo yunohost app setting $app is_public -v "$is_public"
 
+#install dependency
+ynh_package_is_installed 'php-geoip'
+if [[ ! $? -eq 0 ]]; then
+  ynh_package_install 'php-geoip'
+  #c'est pas très propre, mais ça marche
+  systemctl restart php*fpm*
+fi
 
 
 # Copy source files
