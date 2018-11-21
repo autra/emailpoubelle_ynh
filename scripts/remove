@@ -16,6 +16,7 @@ ynh_mysql_remove_db $db_user $db_name
 sudo rm -rf /var/www/emailpoubelle
 #removing nginx conf
 sudo rm -f /etc/nginx/conf.d/$domain.d/emailpoubelle.conf
+#todo remove php-geoip
 #removing aliases
 sudo sed -i "/devnull:\/dev\/null/d" /etc/aliases
 sudo newaliases
