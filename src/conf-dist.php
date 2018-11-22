@@ -21,7 +21,7 @@ include_once(INC.'/ep_header.php');
 define('DEBUG', false);
 
 $supported_locales = array('fr_FR','en_GB');
-$locale = "en_GB";
+$locale = "fr_FR";
 if(isset($_GET['lang']) && in_array($_GET['lang'], $supported_locales)){
 	$locale =  $_GET['lang'];
 }
