@@ -12,10 +12,13 @@ Of course, once uninstalled, everything get back to normal.
 TODO : 
 ------
 In process : move to 2.0
+check nginx conf
+insert clean index.php
+insert cron in conf
+insert symlink for langages
+check dependency for lang
+remove php-geoip on remove
 
 Test it ! (and check if that doesn't interfer with postfix and its aliases)
-
-Test Translate !
-Translate it to other languages !
 
 cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app
