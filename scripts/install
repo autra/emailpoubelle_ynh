@@ -54,6 +54,11 @@ fi
 sudo mkdir -p $final_path
 sudo cp -R ../src/* $final_path
 
+#Temporaire - mettre en config
+ln -s $final_path/lang/fr $final_path/lang/fr_FR
+ln -s $final_path/lang/it $final_path/lang/it_IT
+
+
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
 sudo chown -R www-data:www-data $final_path
