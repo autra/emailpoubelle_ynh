@@ -53,6 +53,7 @@ fi
 # Copy source files
 sudo mkdir -p $final_path
 sudo cp -R ../src/* $final_path
+sudo cp ../conf/index_source.php $final_path/www/index.php
 
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
