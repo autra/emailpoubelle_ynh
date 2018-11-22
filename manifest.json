@@ -18,7 +18,8 @@
         "nginx",
         "mysql",
         "dovecot",
-        "postfix"
+        "postfix",
+        "php",
     ],
     "arguments": {
         "install" : [
