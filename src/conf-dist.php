@@ -20,6 +20,18 @@ include_once(INC.'/ep_header.php');
 
 define('DEBUG', false);
 
+$supported_locales = array('fr_FR','en_GB');
+$locale = "en_GB";
+if(isset($_GET['lang']) && in_array($_GET['lang'], $supported_locales)){
+	$locale =  $_GET['lang'];
+}
+define('workaround_lang', "C.UTF-8");
+putenv("LC_ALL=".workaround_lang);
+setlocale(LC_ALL, workaround_lang);
+bindtextdomain("strings", "/var/www/emailpoubelle/locale/".$locale);
+bind_textdomain_codeset('strings', 'UTF-8');
+textdomain("strings");
+
 // Domain email (separe with ; exemple : exemple.com;zici.fr;exemple.fr)
 define('DOMAIN', 'exemple.fr');
 //define('DOMAIN', 'exemple.com;zici.fr;exemple.fr');
