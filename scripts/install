@@ -13,7 +13,7 @@ ynh_abort_if_errors
 # Retrieve arguments
 app=emailpoubelle
 domain=$1
-path=$2
+path_url=$2
 admin=$3
 is_public=$4
 final_path=/var/www/$app
