@@ -19,7 +19,7 @@
         "mysql",
         "dovecot",
         "postfix",
-        "php7.0-fpm
+        "php7.0-fpm"
     ],
     "arguments": {
         "install" : [
