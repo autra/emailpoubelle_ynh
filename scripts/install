@@ -46,8 +46,6 @@ sudo yunohost app setting $app is_public -v "$is_public"
 ynh_package_is_installed 'php-geoip'
 if [[ ! $? -eq 0 ]]; then
   ynh_package_install 'php-geoip'
-  #c'est pas très propre, mais ça marche
-  systemctl restart php*fpm*
 fi
 
 #install locale (nginx will restart at the end of the install)
@@ -129,4 +127,6 @@ sudo chmod 644 /etc/cron.d/emailpoubelle
 # Restart services
 sudo service nginx reload
 sudo service postfix reload
+sudo service php* reload
 sudo yunohost app ssowatconf
+ 
