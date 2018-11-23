@@ -23,7 +23,7 @@ insert symlink for langages
 
 check dependency for lang
 
-remove php-geoip on remove
+remove php-geoip and new locale on remove
 
 Test it ! (and check if that doesn't interfer with postfix and its aliases)
 
