@@ -19,7 +19,7 @@
         "mysql",
         "dovecot",
         "postfix",
-        "php",
+        "php"
     ],
     "arguments": {
         "install" : [
