@@ -7,9 +7,8 @@
 #=================================================
 source /usr/share/yunohost/helpers
 
-
-app=emailpoubelle
-lang="fr_FR.UTF-8 en_US.UTF-8 it_IT.UTF-8"
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
 # Retrieve arguments
 domain=$1
@@ -17,19 +16,25 @@ path=$2
 admin=$3
 is_public=$4
 final_path=/var/www/$app
-
+app=emailpoubelle
+lang="fr_FR.UTF-8 en_US.UTF-8 it_IT.UTF-8"
+cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 postfix=/etc/postfix/main.cf
 
-cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
+
+final_path=/var/www/$app
+test ! -e "$final_path" || ynh_die "This path already contains a folder"
+
+# Normalize the url path syntax
+path_url=$(ynh_normalize_url_path $path_url)
 
 # Check web path availability
-ynh_webpath_available $domain $path
-#sudo yunohost app checkurl $domain$path -a $app
-if [[ ! $? -eq 0 ]]; then
-exit 1
-fi
+ynh_webpath_available $domain $path_url
 # Register (book) web path
-ynh_webpath_register $app $domain $path
+ynh_webpath_register $app $domain $path_url
 
 # Check user
 ynh_user_exists "$admin"
@@ -37,10 +42,15 @@ if [[ ! $? -eq 0 ]]; then
 echo "Wrong user"
 exit 1
 fi
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
 
-# Save app settings
-sudo yunohost app setting $app admin -v "$admin"
-sudo yunohost app setting $app is_public -v "$is_public"
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path_url
+ynh_app_setting_set $app admin $admin
+ynh_app_setting_set $app is_public $is_public
+#sudo yunohost app setting $app is_public -v "$is_public"
 
 #install dependency
 ynh_package_is_installed 'php-geoip'
@@ -70,7 +80,6 @@ sudo cp ../conf/index_source.php $final_path/www/index.php
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
 ln -s $final_path/lang/it $final_path/lang/it_IT
 
-
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
 sudo chown -R www-data:www-data $final_path
@@ -82,7 +91,8 @@ db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]'
 db_user=emailPoubelle
 
 #write password to the conf file
-sudo sed -i "s@motdepassedefou@$db_pwd@g" $final_path/conf.php
+ynh_replace_string "motdepassedefou" "$db_pwd" $final_path/conf.php
+#sudo sed -i "s@motdepassedefou@$db_pwd@g" $final_path/conf.php
 
 #setting conf file not world-readable (dude, there is a plain-text password !)
 sudo chmod o-r $final_path/conf.php
