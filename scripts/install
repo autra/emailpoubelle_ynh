@@ -11,12 +11,12 @@ source /usr/share/yunohost/helpers
 ynh_abort_if_errors
 
 # Retrieve arguments
+app=emailpoubelle
 domain=$1
 path=$2
 admin=$3
 is_public=$4
 final_path=/var/www/$app
-app=emailpoubelle
 lang="fr_FR.UTF-8 en_US.UTF-8 it_IT.UTF-8"
 cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 postfix=/etc/postfix/main.cf
