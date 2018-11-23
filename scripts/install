@@ -51,7 +51,7 @@ fi
 #install locale (nginx will restart at the end of the install)
 for i in $lang
 do
-  cat /etc/locale/locale.gen | grep "^[^#;]" | grep $i
+  cat /etc/locale.gen | grep "^[^#;]" | grep $i
   if [[ ! $? -eq 0 ]]; then
     echo "$i UTF-8" >> /etc/locale.gen
     locale=1
