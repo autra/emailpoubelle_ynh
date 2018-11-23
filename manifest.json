@@ -18,8 +18,7 @@
         "nginx",
         "mysql",
         "dovecot",
-        "postfix",
-        "php7.0-fpm"
+        "postfix"
     ],
     "arguments": {
         "install" : [
