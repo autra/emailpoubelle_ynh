@@ -5,20 +5,18 @@
 #=================================================
 # IMPORT GENERIC HELPERS
 #=================================================
+source _common.sh
 source /usr/share/yunohost/helpers
 
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
 # Retrieve arguments
-app=emailpoubelle
 domain=$1
 path_url=$2
 admin=$3
 is_public=$4
 final_path=/var/www/$app
-lang="fr_FR.UTF-8 en_US.UTF-8 it_IT.UTF-8"
-cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 postfix=/etc/postfix/main.cf
 
 #=================================================
