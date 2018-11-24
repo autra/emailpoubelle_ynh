@@ -28,6 +28,8 @@ TODO :
 
 [ ] remove new locale on remove
 
+[ ] Why the flag don't show??
+
 [ ] Implement Admin panel
 
 [ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
