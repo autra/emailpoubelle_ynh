@@ -4,10 +4,10 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 
-db_user=emailPoubelle
-db_name=$db_user
-root_pwd=$(sudo cat /etc/yunohost/mysql)
 domain=$(ynh_app_setting_get $app domain)
+db_name=$(ynh_app_setting_get $app db_name)
+db_user==$db_name
+root_pwd=$(sudo cat /etc/yunohost/mysql)
 postfix=/etc/postfix/main.cf
 
 #remove php-geoip
