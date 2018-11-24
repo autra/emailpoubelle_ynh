@@ -21,7 +21,7 @@ db_name=$(ynh_app_setting_get $app db_name)
 
 #check for matlink's version
 cat /etc/yunohost/apps/$app/status.json | grep "matlink"
-if [[ ! $?==0 ]]; then
+if [[ $?==0 ]]; then
   #add missing info in settings
   final_path=var/www/$app
   db_name=emailPoubelle
