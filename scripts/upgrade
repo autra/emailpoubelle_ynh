@@ -42,6 +42,7 @@ if [[ ! $?==0 ]]; then
   
   #switch from previous (modified) conf.php to new one (emailpoubelle original)
   cp ../src/conf-dist.php $final_path/conf-dist.new.php
+  #insert domain in line 24, DB in line 31, DBUSER in line 32, etc.
   rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DOMAIN',")
   sed -i "24s/.*/${rep}/" $final_path/conf-dist.new.php
   rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DB',")
@@ -50,6 +51,8 @@ if [[ ! $?==0 ]]; then
   sed -i "32s/.*/${rep}/" $final_path/conf-dist.new.php
   rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBPASS',")
   sed -i "33s/.*/${rep}/" $final_path/conf-dist.new.php
+  #replace old conf and process with install command
+  mv $final_path/conf.php $final_path/conf.php.old 
   mv $final_path/conf-dist.new.php $final_path/conf.php
   ynh_replace_string "define('DB', 'sqlite:'" "//define('DB', 'sqlite:'" $final_path/conf.php
   ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
