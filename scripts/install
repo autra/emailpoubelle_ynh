@@ -58,7 +58,7 @@ do
 #    echo "$i UTF-8" >> /etc/locale.gen
 #    locale=1
 #  fi
-ynh_replace_string "#$i" "$i" /etc/locale.gen
+ynh_replace_string "# $i" "$i" /etc/locale.gen
 
 done
 #if [[ $locale -eq 1 ]]; then
