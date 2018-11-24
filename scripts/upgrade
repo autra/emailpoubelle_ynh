@@ -19,8 +19,44 @@ admin=$(ynh_app_setting_get $app admin)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
 
-
-test -e "$final_path" || ynh_die "The path $final_path does not exist"
+#check for matlink's version
+cat /etc/yunohost/apps/$app/status.json | grep "matlink"
+if [[ ! $?==0 ]]; then
+  #add missing info in settings
+  final_path=var/www/$app
+  db_name=emailPoubelle
+  ynh_app_setting_set $app db_name $db_name
+  ynh_app_setting_set $app final_path $final_path
+  #install geoip dependencies
+  ynh_install_app_dependencies $pkg_dependencies
+  #install locale packages
+  for i in $lang ; do
+    ynh_replace_string "# $i" "$i" /etc/locale.gen
+  done
+  locale-gen
+  #change folder locale => lang as per src2.0
+  rm -rf /var/www/$app/locale
+  mkdir -p /var/www/$app/lang
+  #add new index.php
+  cp ../conf/index_source.php $final_path/www/index.php
+  
+  #switch from previous (modified) conf.php to new one (emailpoubelle original)
+  cp ../src/conf-dist.php $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DOMAIN',")
+  sed -i "24s/.*/${rep}/" $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DB',")
+  sed -i "31s/.*/${rep}/" $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBUSER',")
+  sed -i "32s/.*/${rep}/" $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBPASS',")
+  sed -i "33s/.*/${rep}/" $final_path/conf-dist.new.php
+  mv $final_path/conf-dist.new.php $final_path/conf.php
+  ynh_replace_string "define('DB', 'sqlite:'" "//define('DB', 'sqlite:'" $final_path/conf.php
+  ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
+  #setting conf file not world-readable (dude, there is a plain-text password !)
+  sudo chmod o-r $final_path/conf.php
+  
+fi
 
 # Copy source files
 cp -R ../src/bin/ $final_path/bin
@@ -29,6 +65,15 @@ cp -R ../src/lang/ $final_path/lang
 cp -R ../src/www/ $final_path/www
 cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
 cp ../src/emailPoubelleAdmin.php $final_path/emailPoubelleAdmin.php
+cp ../src/README.md $final_path/README.md
+cp ../src/LICENSE $final_path/LICENSE
+cp ../src/conf-dist.php $final_path/conf-dist.php
+cp ../conf/index_source.php $final_path/www/index.php
+
+#Temporaire - mettre en config
+ln -s $final_path/lang/fr $final_path/lang/fr_FR
+ln -s $final_path/lang/it $final_path/lang/it_IT
+
 chown -R www-data:www-data $final_path
 
 #adding php-cli for cron
