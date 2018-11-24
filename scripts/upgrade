@@ -69,7 +69,7 @@ cp -R ../src/www/ $final_path/www
 cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
 cp ../src/emailPoubelleAdmin.php $final_path/emailPoubelleAdmin.php
 cp ../src/README.md $final_path/README.md
-cp ../src/LICENSE $final_path/LICENSE
+cp ../src/CHANGELOG.md $final_path/CHANGELOG.md
 cp ../src/conf-dist.php $final_path/conf-dist.php
 cp ../conf/index_source.php $final_path/www/index.php
 
