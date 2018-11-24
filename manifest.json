@@ -13,6 +13,9 @@
         "name": "krakinou",
         "email": "misterl56@hotmail.com"
     },
+        "requirements": {
+        "yunohost": ">= 3.0.0"
+    },
     "multi_instance": false,
     "services": [
         "nginx",
