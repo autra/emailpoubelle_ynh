@@ -32,6 +32,10 @@ TODO :
 
 [ ] Implement Admin panel
 
+[ ] Add backup restore script
+
+[ ] check checksum on download
+
 [ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
 
 [ ] cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app
