@@ -1,0 +1,93 @@
+#!/bin/bash
+
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+source _common.sh
+source /usr/share/yunohost/helpers
+#=================================================
+# LOAD SETTINGS
+#=================================================
+
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+admin=$(ynh_app_setting_get $app admin)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
+
+#check for matlink's version
+cat /etc/yunohost/apps/$app/status.json | grep "matlink"
+if [[ $?==0 ]]; then
+  #add missing info in settings
+  final_path=/var/www/$app
+  db_name=emailPoubelle
+  ynh_app_setting_set $app db_name $db_name
+  ynh_app_setting_set $app final_path $final_path
+  #install geoip dependencies
+  ynh_install_app_dependencies $pkg_dependencies
+  #install locale packages
+  for i in $lang ; do
+    ynh_replace_string "# $i" "$i" /etc/locale.gen
+  done
+  locale-gen
+  #change folder locale => lang as per src2.0
+  rm -rf $final_path/locale
+  mkdir -p $final_path/lang
+  #add new index.php
+  cp ../conf/index_source.php $final_path/www/index.php
+  
+  #switch from previous (modified) conf.php to new one (emailpoubelle original)
+  cp ../src/conf-dist.php $final_path/conf-dist.new.php
+  #insert domain in line 24, DB in line 31, DBUSER in line 32, etc.
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DOMAIN',")
+  sed -i "24s/.*/${rep}/" $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DB',")
+  sed -i "31s/.*/${rep}/" $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBUSER',")
+  sed -i "32s/.*/${rep}/" $final_path/conf-dist.new.php
+  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBPASS',")
+  sed -i "33s/.*/${rep}/" $final_path/conf-dist.new.php
+  #replace old conf and process with install command
+  mv $final_path/conf.php $final_path/conf.php.old 
+  mv $final_path/conf-dist.new.php $final_path/conf.php
+  ynh_replace_string "define('DB', 'sqlite:'" "//define('DB', 'sqlite:'" $final_path/conf.php
+  ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
+  #setting conf file not world-readable (dude, there is a plain-text password !)
+  sudo chmod o-r $final_path/conf.php
+  
+fi
+
+# Copy source files
+cp -a ../src/bin/. $final_path/bin
+cp -a ../src/lib/. $final_path/lib
+cp -a ../src/lang/. $final_path/lang
+cp -a ../src/www/. $final_path/www
+cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
+cp ../src/emailPoubelleAdmin.php $final_path/emailPoubelleAdmin.php
+cp ../src/README.md $final_path/README.md
+cp ../src/CHANGELOG.md $final_path/CHANGELOG.md
+cp ../src/conf-dist.php $final_path/conf-dist.php
+cp ../conf/index_source.php $final_path/www/index.php
+
+#Temporaire - mettre en config
+ln -s $final_path/lang/fr $final_path/lang/fr_FR
+ln -s $final_path/lang/it $final_path/lang/it_IT
+
+chown -R www-data:www-data $final_path
+
+#adding php-cli for cron
+#sudo apt-get update -qq 
+#sudo apt-get install -yqq php5-cli
+#adding cronjob for removing expired email addresses
+#sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle 
+#sudo chmod 644 /etc/cron.d/emailpoubelle 
+
+# Restart services
+sudo service php7.0-fpm restart
+sudo service nginx reload
+sudo service postfix reload
+sudo yunohost app ssowatconf

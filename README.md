@@ -1,44 +1,41 @@
-emailPoubelle.php
+emailpoubelle
 =============
+A Yunohost version of Email Poubelle by David Mercereau. All thanks to David. 
+http://www.mercereau.info/sortie-de-la-version-1-0-demailpoubelle-php-email-jetable-auto-hebergeable/
 
-Un script pour un petit service d'email jetable
+Original packaging done by Matlink, https://github.com/matlink/emailpoubelle_ynh
 
-* [Démo](http://poubelle.zici.fr/)
-* [Page du projet](http://forge.zici.fr/p/emailpoubelle-php/)
-* [Download](http://forge.zici.fr/p/emailpoubelle-php/source/download/master/)
-* [Bug report](http://forge.zici.fr/p/emailpoubelle-php/issues/)
+WARNING
+=========
+Using this will cause to disable the Yunohost ldap aliases ! Once installed, you won't be able to use the aliasses settings that you can see when you modify your personnal settings in the SSOWAT pannel.
+Of course, once uninstalled, everything get back to normal. 
 
-Installation
------------
+TODO : 
+------
+[X] move to 2.0
 
-Installation des dépendances :
+[ ] check nginx conf
 
-    pear install Net_DNS2
+[X] insert clean index.php
 
-Télécharger & décompresser les sources :
+[ ] insert cron in conf
 
-    mkdir -p /www/emailPoubelle/postfix
-    cd /tmp
-    wget -O emailPoubelle.zip https://framagit.org/kepon/emailPoubellePhp/-/archive/master/emailPoubellePhp-master.zip
-    unzip emailPoubelle.zip
-    cp -r emailpoubelle-php-master/* /var/www/emailPoubelle
+[ ] insert symlink for langages in /lang
 
-Configure apache virtualhost (ou autres serveur http)
-	[...]
-	DocumentRoot /var/www/emailPoubelle/www
-	[...]
+[X] check dependency for lang
 
-Configurer Postfix :
+[X] remove php-geoip 
 
-    vi /etc/postfix/main.cf
-        [...]
-        virtual_alias_maps = hash:/www/emailPoubelle/var/virtual
-    touch /www/emailPoubelle/var/virtual
-    /usr/sbin/postmap /www/emailPoubelle/var/virtual
-    chown www-data /www/emailPoubelle/var/virtual
-    chown www-data /www/emailPoubelle/var/virtual.db
+[ ] remove new locale on remove
 
-Ajouter dans le fichier /etc/aliases le devnull
+[ ] Why the flag don't show??
 
-	echo "devnull:	/dev/null" >> /etc/aliases
-	newaliases
+[ ] Implement Admin panel
+
+[ ] Add backup restore script
+
+[ ] check checksum on download
+
+[ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
+
+[ ] cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app

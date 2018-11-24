@@ -1,0 +1,69 @@
+{
+    "name": "EmailPoubelle",
+    "id": "emailpoubelle",
+    "packaging_format": 1,
+    "description": {
+        "en": "Create throwable email address redirected to your real one",
+        "fr": "Créez des adresses email jetables qui redirigent les mails vers votre adresse réelle"
+    },
+    "url": "https://framagit.org/kepon/emailPoubellePhp/",
+    "version": "2.0~ynh1",
+    "license": "Beerware",
+    "maintainer": {
+        "name": "krakinou",
+        "email": "misterl56@hotmail.com"
+    },
+        "requirements": {
+        "yunohost": ">= 3.0.0"
+    },
+    "multi_instance": false,
+    "services": [
+        "nginx",
+        "mysql",
+        "dovecot",
+        "postfix"
+    ],
+    "arguments": {
+        "install" : [
+            {
+                "name": "domain",
+                "type": "domain",
+                "ask": {
+                    "en": "Choose a domain for emailpoubelle",
+                    "fr": "Choisissez un domaine pour emailpoubelle"
+                },
+                "example": "domain.org"
+            },
+            {
+                "name": "path",
+                "type": "path",
+                "ask": {
+                    "en": "Choose a path for emailpoubelle",
+                    "fr": "Choisissez un chemin pour emailpoubelle"
+                },
+                "example": "/poubelle",
+                "default": "/poubelle"
+            },
+            {
+                "name": "admin",
+                "type": "user",
+                "ask": {
+                    "en": "Choose an admin user for emailpoubelle",
+                    "fr": "Choisissez un administrateur pour emailpoubelle"
+                },
+                "example": "homer"
+            },
+            {
+                "name": "public_site",
+                "ask": {
+                    "en": "Should this application be public ?",
+                    "fr": "Est-ce que cette application doit être visible publiquement ?"
+                },
+                "choices": ["Yes", "No"],
+                "default": "No"
+            }
+
+
+        ]
+    }
+}
