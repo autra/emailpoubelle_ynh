@@ -23,7 +23,7 @@ db_name=$(ynh_app_setting_get $app db_name)
 cat /etc/yunohost/apps/$app/status.json | grep "matlink"
 if [[ $?==0 ]]; then
   #add missing info in settings
-  final_path=var/www/$app
+  final_path=/var/www/$app
   db_name=emailPoubelle
   ynh_app_setting_set $app db_name $db_name
   ynh_app_setting_set $app final_path $final_path
@@ -35,8 +35,8 @@ if [[ $?==0 ]]; then
   done
   locale-gen
   #change folder locale => lang as per src2.0
-  rm -rf /var/www/$app/locale
-  mkdir -p /var/www/$app/lang
+  rm -rf $final_path/locale
+  mkdir -p $final_path/lang
   #add new index.php
   cp ../conf/index_source.php $final_path/www/index.php
   
