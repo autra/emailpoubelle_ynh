@@ -17,6 +17,7 @@ path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
 is_public=$4
 final_path=/var/www/$app
+db_user=emailPoubelle
 postfix=/etc/postfix/main.cf
 
 #=================================================
@@ -45,23 +46,24 @@ ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path_url
 ynh_app_setting_set $app admin $admin
 ynh_app_setting_set $app is_public $is_public
-#sudo yunohost app setting $app is_public -v "$is_public"
+ynh_app_setting_set $app db_name $db_user
 
 #install dependency
 ynh_install_app_dependencies $pkg_dependencies
 
 #install locale (nginx will restart at the end of the install)
-for i in $lang
-do
-ynh_replace_string "# $i" "$i" /etc/locale.gen
+for i in $lang ; do
+ ynh_replace_string "# $i" "$i" /etc/locale.gen
 done
 locale-gen
-
 
 # Copy source files
 sudo mkdir -p $final_path
 sudo cp -R ../src/* $final_path
 sudo cp ../conf/index_source.php $final_path/www/index.php
+
+#generating random password for database
+db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
 
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
@@ -70,23 +72,22 @@ ln -s $final_path/lang/it $final_path/lang/it_IT
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
 sudo chown -R www-data:www-data $final_path
-ynh_replace_string "exemple.fr" "$domain" $final_path/conf.php
-ynh_replace_string "exemple.com" "$domain" $final_path/conf.php
-
-#generating random password for database
-db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
-db_user=emailPoubelle
-
-#write password to the conf file
-ynh_replace_string "motdepassedefou" "$db_pwd" $final_path/conf.php
-#sudo sed -i "s@motdepassedefou@$db_pwd@g" $final_path/conf.php
-
+#Update various conf : domain, database, user and password
+ynh_replace_string "exemple.fr"                  "$domain"                    $final_path/conf.php
+ynh_replace_string "exemple.com"                 "$domain"                    $final_path/conf.php
+ynh_replace_string "define('DB', 'sqlite:'"      "//define('DB', 'sqlite:'"   $final_path/conf.php
+ynh_replace_string "define('ALIASLIMITBYMAIL"    "//define('ALIASLIMITBYMAIL" $final_path/conf.php
+ynh_replace_string "//      define('DB', 'mysql" "      define('DB', 'mysql"  $final_path/conf.php
+ynh_replace_string "//      define('DBUSER',"    "        define('DBUSER',"   $final_path/conf.php
+ynh_replace_string "//      define('DBPASS',"    "        define('DBPASS',"   $final_path/conf.php
+ynh_replace_string "baseMysql"                   "$db_user"                   $final_path/conf.php
+ynh_replace_string "utilisateurMysql"            "$db_user"                   $final_path/conf.php
+ynh_replace_string "motdepassedefou"             "$db_pwd"                    $final_path/conf.php
 #setting conf file not world-readable (dude, there is a plain-text password !)
 sudo chmod o-r $final_path/conf.php
 
 #initialize database (databasename = db_user)
 ynh_mysql_create_db $db_user $db_user $db_pwd 
-ynh_app_setting_set $app db_name $db_name
 
 #setting postfix to use virtual aliases file
 sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
