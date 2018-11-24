@@ -1,15 +1,29 @@
 #!/bin/bash
-# Write all logs to file
-#exec > >(tee /tmp/emailpoubelle.log)
-#exec 2>&1
-app=emailpoubelle
 
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+source _common.sh
+source /usr/share/yunohost/helpers
+#=================================================
+# LOAD SETTINGS
+#=================================================
 
-final_path=/var/www/emailpoubelle
+app=$YNH_APP_INSTANCE_NAME
 
-cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
+admin=$(ynh_app_setting_get $app admin)
+final_path=$(ynh_app_setting_get $app final_path)
+db_name=$(ynh_app_setting_get $app db_name)
+
+final_path=/var/www/$app
+
 
 # Copy source files
+test -e "$final_path" || ynh_die "This path already contains a folder"
 sudo mkdir -p $final_path
 sudo cp -R ../src/bin/ $final_path/bin
 sudo cp -R ../src/lib/ $final_path/lib
