@@ -16,7 +16,7 @@
 <![endif]-->  
 	<div id="a">
 		<header>
-			<a href="/" title="Startseite"><strong>OWMX-2</strong> HTML5 &amp; CSS3</a>
+			<a href="/" title="Startseite"><strong>EmailPoubelle</strong> </a>
 		</header>
 		<div id="b">
 			<article>
