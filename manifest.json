@@ -59,7 +59,7 @@
                 "ask": {
                     "en": "Enter a password to access the admin panel",
                     "fr": "Entrer un mot de passe pour accéder au tableau d'administration"
-                }
+                },
                 "example": "AveryStrongPassword"
             },
             {
