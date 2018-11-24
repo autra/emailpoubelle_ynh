@@ -86,7 +86,7 @@ sudo chmod o-r $final_path/conf.php
 
 #initialize database (databasename = db_user)
 ynh_mysql_create_db $db_user $db_user $db_pwd 
-#sudo yunohost app initdb $db_user -p $db_pwd
+ynh_app_setting_set $app db_name $db_name
 
 #setting postfix to use virtual aliases file
 sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
