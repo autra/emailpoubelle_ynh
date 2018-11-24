@@ -11,7 +11,7 @@ Of course, once uninstalled, everything get back to normal.
 
 TODO : 
 ------
-In process : move to 2.0
+[X] move to 2.0
 
 [ ] check nginx conf
 
@@ -19,9 +19,9 @@ In process : move to 2.0
 
 [ ] insert cron in conf
 
-[ ] insert symlink for langages
+[ ] insert symlink for langages in /lang
 
-[ ] check dependency for lang
+[X] check dependency for lang
 
 [X] remove php-geoip 
 
