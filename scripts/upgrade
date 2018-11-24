@@ -62,10 +62,10 @@ if [[ $?==0 ]]; then
 fi
 
 # Copy source files
-cp -R ../src/bin/ $final_path/bin
-cp -R ../src/lib/ $final_path/lib
-cp -R ../src/lang/ $final_path/lang
-cp -R ../src/www/ $final_path/www
+cp -a ../src/bin/. $final_path/bin
+cp -a ../src/lib/. $final_path/lib
+cp -a ../src/lang/. $final_path/lang
+cp -a ../src/www/. $final_path/www
 cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
 cp ../src/emailPoubelleAdmin.php $final_path/emailPoubelleAdmin.php
 cp ../src/README.md $final_path/README.md
