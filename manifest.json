@@ -8,12 +8,12 @@
     },
     "url": "https://framagit.org/kepon/emailPoubellePhp/",
     "version": "2.0~ynh1",
-    "multi_instance": "false",
     "license": "Beerware",
     "maintainer": {
         "name": "krakinou",
         "email": "misterl56@hotmail.com"
     },
+    "multi_instance": false,
     "services": [
         "nginx",
         "mysql",
