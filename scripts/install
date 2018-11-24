@@ -12,9 +12,9 @@ source /usr/share/yunohost/helpers
 ynh_abort_if_errors
 
 # Retrieve arguments
-domain=$1
-path_url=$2
-admin=$3
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+admin=$YNH_APP_ARG_ADMIN
 is_public=$4
 final_path=/var/www/$app
 postfix=/etc/postfix/main.cf
