@@ -53,17 +53,10 @@ ynh_install_app_dependencies $pkg_dependencies
 #install locale (nginx will restart at the end of the install)
 for i in $lang
 do
-#  cat /etc/locale.gen | grep "^[^#;]" | grep $i
-#  if [[ ! $? -eq 0 ]]; then
-#    echo "$i UTF-8" >> /etc/locale.gen
-#    locale=1
-#  fi
 ynh_replace_string "# $i" "$i" /etc/locale.gen
-
 done
-#if [[ $locale -eq 1 ]]; then
-  locale-gen
-#fi
+locale-gen
+
 
 # Copy source files
 sudo mkdir -p $final_path
@@ -77,8 +70,8 @@ ln -s $final_path/lang/it $final_path/lang/it_IT
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
 sudo chown -R www-data:www-data $final_path
-sudo sed -i "s@exemple.fr@$domain@g" $final_path/conf.php
-sudo sed -i "s@exemple.com@$domain@g" $final_path/conf.php
+ynh_replace_string "exemple.fr" "$domain" $final_path/conf.php
+ynh_replace_string "exemple.com" "$domain" $final_path/conf.php
 
 #generating random password for database
 db_pwd=$(dd if=/dev/urandom bs=1 count=200 2> /dev/null | tr -c -d '[A-Za-z0-9]' | sed -n 's/\(.\{24\}\).*/\1/p')
