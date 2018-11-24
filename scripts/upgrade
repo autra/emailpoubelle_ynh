@@ -80,11 +80,11 @@ ln -s $final_path/lang/it $final_path/lang/it_IT
 chown -R www-data:www-data $final_path
 
 #adding php-cli for cron
-sudo apt-get update -qq 
-sudo apt-get install -yqq php5-cli
+#sudo apt-get update -qq 
+#sudo apt-get install -yqq php5-cli
 #adding cronjob for removing expired email addresses
-sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle 
-sudo chmod 644 /etc/cron.d/emailpoubelle 
+#sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle 
+#sudo chmod 644 /etc/cron.d/emailpoubelle 
 
 # Restart services
 sudo service php7.0-fpm restart
