@@ -54,6 +54,15 @@
                 "example": "homer"
             },
             {
+                "name": "password",
+                "type": "password",
+                "ask": {
+                    "en": "Enter a password to access the admin panel",
+                    "fr": "Entrer un mot de passe pour accéder au tableau d'administration"
+                },
+                "example": "AveryStrongPassword"
+            },
+            {
                 "name": "public_site",
                 "ask": {
                     "en": "Should this application be public ?",
@@ -62,8 +71,6 @@
                 "choices": ["Yes", "No"],
                 "default": "No"
             }
-
-
         ]
     }
 }

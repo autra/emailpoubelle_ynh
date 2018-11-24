@@ -19,9 +19,7 @@
 			<a href="/" title="Startseite"><strong>EmailPoubelle</strong> </a>
 		</header>
 		<div id="b">
-			<article>
-				<h1><?= _('Emails trash free') ?></h1>
-				<p><?= _('Generate trash emails without lifetime constraint') ?>. </p>
+			<article style="float:left">
 				<?php 
 				// Intégration dans votre site :
 				if (file_exists('../conf.php')) {
@@ -29,7 +27,8 @@
 				} else {
 					include('../conf-dist.php');
 				}
-				include('../emailPoubelle.php'); 
+				include('../emailPoubelle.php');
+				include('../emailPoubelleAdmin.php');
 				?>
 		</div>
 	</div>

@@ -51,7 +51,7 @@ define('URLPAGE', 'http://'.$_SERVER["SERVER_NAME"].$_SERVER["SCRIPT_NAME"]);
 // Email 
 define('EMAILTAGSUJET', '[EmailPoubelle]');
 // From de l'email
-define('EMAILFROM', '"NO REPLAY emailPoubelle" <emailpoubelle@exemple.com>');
+define('EMAILFROM', '"NO REPLY emailPoubelle" <emailpoubelle@exemple.com>');
 define('EMAILEND', 'emailPoubelle.zici.fr');
 
 // Alisas interdit : (regex ligne par ligne) - commenter pour désactiver

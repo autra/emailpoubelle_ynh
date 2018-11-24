@@ -30,7 +30,7 @@ TODO :
 
 [ ] Why the flag don't show??
 
-[ ] Implement Admin panel
+[X] Implement Admin panel
 
 [ ] Add backup restore script
 
