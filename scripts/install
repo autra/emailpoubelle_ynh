@@ -83,7 +83,6 @@ db_pwd=$(ynh_string_random)
 
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
-sudo chown -R www-data:www-data $final_path
 #Update various conf : domain, database, user and password
 ynh_replace_string "exemple.fr"                  "$domain"                    $final_path/conf.php
 ynh_replace_string "exemple.com"                 "$domain"                    $final_path/conf.php
@@ -109,8 +108,7 @@ echo  "virtual_alias_maps = hash:$final_path/var/virtual" | sudo tee -a $postfix
 #create the virtual aliases file 
 sudo touch $final_path/var/virtual
 sudo postmap $final_path/var/virtual
-sudo chown www-data $final_path/var/virtual
-sudo chown www-data $final_path/var/virtual.db
+sudo chown -R www-data:www-data $final_path
 
 #create an alias for deleted junk adresses
 sudo cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
