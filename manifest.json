@@ -71,7 +71,17 @@
                 "choices": ["Yes", "No"],
                 "default": "No"
             }
-
+        ],
+        "upgrade" : [
+            { 
+                "name": "password",
+                "type": "password",
+                "ask": {
+                    "en": "Enter a password to access the admin panel, this is required only if you upgrade from 1.0",
+                    "fr": "Entrer un mot de passe pour accéder au tableau d'administration, ce n'est nécessaire qu'en cas d'upgrade depuis la version 1.0"
+                },
+                "example": "AveryStrongPassword"
+            },
         ]
     }
 }
