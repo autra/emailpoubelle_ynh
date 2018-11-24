@@ -49,7 +49,10 @@ ynh_app_setting_set $app is_public $is_public
 ynh_app_setting_set $app db_name $db_user
 ynh_app_setting_set $app final_path $final_path
 
-#install dependency
+#=================================================
+#INSTALL DEPENDENCIES
+#=================================================
+
 ynh_install_app_dependencies $pkg_dependencies
 
 #install locale (nginx will restart at the end of the install)
@@ -58,17 +61,25 @@ for i in $lang ; do
 done
 locale-gen
 
+#=================================================
+#INSTALL SOURCES
+#===============================================
 # Copy source files
 sudo mkdir -p $final_path
 sudo cp -R ../src/* $final_path
 sudo cp ../conf/index_source.php $final_path/www/index.php
 
-#generating random password for database
-db_pwd=$(ynh_string_random)
-
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
 ln -s $final_path/lang/it $final_path/lang/it_IT
+
+
+#===============================================
+#SETTINGS & DATABASE
+#===============================================
+
+#generating random password for database
+db_pwd=$(ynh_string_random)
 
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
@@ -116,7 +127,6 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 #path_url_slash_less=${path_url%/}
 #ynh_replace_string "__PATH__/" "$path_url_slash_less/" "../conf/nginx.conf"
 #ynh_replace_string "__FINALPATH__/" "$final_path/www" "../conf/nginx.conf"
-
 # Create a dedicated nginx config
 #ynh_add_nginx_config
 
@@ -126,6 +136,7 @@ then
 sudo yunohost app setting $app skipped_uris -v "/"
 fi
 
+#A verifier? A integrer dans dépendances?
 #adding php-cli for cron
 sudo apt-get update -qq 
 sudo apt-get install -yqq php5-cli
