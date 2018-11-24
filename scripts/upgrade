@@ -54,6 +54,8 @@ if [[ $?==0 ]]; then
   #replace old conf and process with install command
   mv $final_path/conf.php $final_path/conf.php.old 
   mv $final_path/conf-dist.new.php $final_path/conf.php
+  ynh_replace_string "exemple.fr"             "$domain"                  $final_path/conf.php
+  ynh_replace_string "exemple.com"            "$domain"                  $final_path/conf.php
   ynh_replace_string "define('DB', 'sqlite:'" "//define('DB', 'sqlite:'" $final_path/conf.php
   ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
   #setting conf file not world-readable (dude, there is a plain-text password !)
