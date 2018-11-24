@@ -112,7 +112,7 @@ sudo echo "devnull:/dev/null" | sudo tee -a /etc/aliases
 sudo newaliases
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
-#sudo sed -i "s@YNH_EXAMPLE_PATH@$path@g" ../conf/nginx.conf
+#sudo sed -i "s@YNH_EXAMPLE_PATH@$path_url@g" ../conf/nginx.conf
 #sudo sed -i "s@YNH_EXAMPLE_ALIAS@$final_path/www/@g" ../conf/nginx.conf
 #sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 
@@ -120,6 +120,7 @@ sudo newaliases
 # Temporary fix, in waiting for an upgrade of the helper. (#361)
 path_url_slash_less=${path_url%/}
 ynh_replace_string "__PATH__/" "$path_url_slash_less/" "../conf/nginx.conf"
+ynh_replace_string "__FINALPATH__/" "$final_path/www" "../conf/nginx.conf"
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
