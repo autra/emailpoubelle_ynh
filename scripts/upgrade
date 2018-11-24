@@ -19,18 +19,17 @@ admin=$(ynh_app_setting_get $app admin)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
 
-final_path=/var/www/$app
 
+test -e "$final_path" || ynh_die "The path $final_path does not exist"
 
 # Copy source files
-test -e "$final_path" || ynh_die "This path already contains a folder"
-sudo mkdir -p $final_path
-sudo cp -R ../src/bin/ $final_path/bin
-sudo cp -R ../src/lib/ $final_path/lib
-sudo cp -R ../src/locale/ $final_path/locale
-sudo cp -R ../src/www/ $final_path/www
-sudo cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
-sudo chown -R www-data:www-data $final_path
+cp -R ../src/bin/ $final_path/bin
+cp -R ../src/lib/ $final_path/lib
+cp -R ../src/lang/ $final_path/lang
+cp -R ../src/www/ $final_path/www
+cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
+cp ../src/emailPoubelleAdmin.php $final_path/emailPoubelleAdmin.php
+chown -R www-data:www-data $final_path
 
 #adding php-cli for cron
 sudo apt-get update -qq 
