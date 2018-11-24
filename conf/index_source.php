@@ -28,7 +28,7 @@
 					include('../conf-dist.php');
 				}
 				include('../emailPoubelle.php');
-				include('../emailPoubelle.phpAdmin');
+				include('../emailPoubelleAdmin.php');
 				?>
 		</div>
 	</div>
