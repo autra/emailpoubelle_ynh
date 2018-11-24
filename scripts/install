@@ -15,6 +15,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
+password=$YNH_APP_ARG_PASSWORD
 is_public=$4
 final_path=/var/www/$app
 db_user=emailPoubelle
@@ -95,6 +96,7 @@ ynh_replace_string "//      define('DBPASS',"    "        define('DBPASS',"   $f
 ynh_replace_string "baseMysql"                   "$db_user"                   $final_path/conf.php
 ynh_replace_string "utilisateurMysql"            "$db_user"                   $final_path/conf.php
 ynh_replace_string "motdepassedefou"             "$db_pwd"                    $final_path/conf.php
+ynh_replace_string "define('ADMIN_PASSWORD', 'admin');" "define('ADMIN_PASSWORD', '$password');" $final_path/conf.php
 #setting conf file not world-readable (dude, there is a plain-text password !)
 sudo chmod o-r $final_path/conf.php
 
