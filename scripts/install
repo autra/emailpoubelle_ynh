@@ -19,7 +19,6 @@ password=$YNH_APP_ARG_PASSWORD
 is_public=$5
 final_path=/var/www/$app
 db_user=emailPoubelle
-postfix=/etc/postfix/main.cf
 cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 
 #=================================================
@@ -70,6 +69,7 @@ locale-gen
 sudo mkdir -p $final_path
 sudo cp -R ../src/* $final_path
 sudo cp ../conf/index_source.php $final_path/www/index.php
+ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
@@ -106,7 +106,7 @@ ynh_mysql_create_db $db_user $db_user $db_pwd
 
 #setting postfix to use virtual aliases file
 sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
-sudo sed -i "s/^virtual_alias_maps/#virtual_alias_maps/g" $postfix
+ynh_replace_string "^virtual_alias_maps" "#virtual_alias_maps" $postfix
 echo  "virtual_alias_maps = hash:$final_path/var/virtual" | sudo tee -a $postfix
 
 #create the virtual aliases file 
@@ -147,8 +147,8 @@ sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle
 sudo chmod 644 /etc/cron.d/emailpoubelle 
 
 # Restart services
-sudo service nginx reload
-sudo service postfix reload
+systemctl reload nginx
+systemctl reload postfix
 sudo service php* reload
 sudo yunohost app ssowatconf
  
