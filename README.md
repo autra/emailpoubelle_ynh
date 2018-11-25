@@ -32,7 +32,7 @@ TODO :
 
 [X] Implement Admin panel
 
-[X] Add backup restore script
+[ ] Add backup restore script
 
 [ ] check checksum on download
 
