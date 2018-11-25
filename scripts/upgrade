@@ -67,7 +67,7 @@ if [ -z $db_pass]; then
 #c'est moche mais ça fera bien l'affaire - en deux lignes sinon pb en fonction du type de shell
   t=$(cat /var/www/$app/conf.php | grep DBPASS)
   dbpass=${t:26:24}
-  ynh_appsetting_set $app mysqlpwd $db_pass
+  ynh_app_setting_set $app mysqlpwd $db_pass
 fi
 
 # Copy source files
