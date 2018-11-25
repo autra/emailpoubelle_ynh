@@ -54,7 +54,8 @@ ynh_mysql_dump_db "$db_name" > db.sql
 ynh_backup "/etc/cron.d/$app"
 
 #=================================================
-# BACKUP POSTFIX 
+# BACKUP POSTFIX & ALIASES
 #=================================================
 
 ynh_backup $postfix
+ynh_backup /etc/aliases
