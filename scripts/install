@@ -82,6 +82,7 @@ ln -s $final_path/lang/it $final_path/lang/it_IT
 
 #generating random password for database
 db_pwd=$(ynh_string_random)
+ynh_app_setting_set $app mysqlpwd $db_pwd
 
 #configuring with given settings
 sudo cp $final_path/conf-dist.php $final_path/conf.php
