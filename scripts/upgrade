@@ -87,7 +87,7 @@ chown -R www-data:www-data $final_path
 #sudo chmod 644 /etc/cron.d/emailpoubelle 
 
 # Restart services
-sudo service php7.0-fpm restart
-sudo service nginx reload
-sudo service postfix reload
+systemctl restart php7.0-fpm 
+systemctl reload nginx
+systemctl reload postfix
 sudo yunohost app ssowatconf
