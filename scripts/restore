@@ -72,7 +72,6 @@ ynh_mysql_connect_as $db_name $db_pwd $db_name < ./db.sql
 
 # Define and install dependencies
 ynh_install_app_dependencies $pkg_dependencies
-Recheck local
 #Check & regen local
 for i in $lang ; do
  ynh_replace_string "# $i" "$i" /etc/locale.gen
