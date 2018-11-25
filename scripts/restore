@@ -97,6 +97,7 @@ ynh_restore_file "/etc/cron.d/$app"
 #=================================================
 sudo newaliases
 systemctl reload nginx
+systemctl restart php7.0-fpm
 systemctl reload postfix
 
 
