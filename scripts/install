@@ -146,8 +146,8 @@ sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle
 sudo chmod 644 /etc/cron.d/emailpoubelle 
 
 # Restart services
-sudo service nginx reload
-sudo service postfix reload
+systemctl reload nginx
+systemctl reload postfix
 sudo service php* reload
 sudo yunohost app ssowatconf
  
