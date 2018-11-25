@@ -106,7 +106,8 @@ ynh_mysql_create_db $db_user $db_user $db_pwd
 
 #setting postfix to use virtual aliases file
 sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
-sudo sed -i "s/^virtual_alias_maps/#virtual_alias_maps/g" $postfix
+ynh_replace_string "^virtual_alias_maps" "#virtual_alias_maps" $postfix
+#sudo sed -i "s/^virtual_alias_maps/#virtual_alias_maps/g" $postfix
 echo  "virtual_alias_maps = hash:$final_path/var/virtual" | sudo tee -a $postfix
 
 #create the virtual aliases file 
