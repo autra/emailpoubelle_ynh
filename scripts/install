@@ -19,7 +19,6 @@ password=$YNH_APP_ARG_PASSWORD
 is_public=$4
 final_path=/var/www/$app
 db_user=emailPoubelle
-postfix=/etc/postfix/main.cf
 cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 
 #=================================================
