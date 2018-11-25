@@ -61,6 +61,15 @@ if [[ $?==0 ]]; then
   
 fi
 
+#mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
+db_pass=$(ynh_app_setting_get $app mysqlpwd)
+if [ -z $db_pass]; then
+#c'est moche mais ça fera bien l'affaire - en deux lignes sinon pb en fonction du type de shell
+  t=$(cat /var/www/$app/conf.php | grep DBPASS)
+  dbpass=${t:26:24}
+  ynh_appsetting_set $app mysqlpwd $db_pass
+fi
+
 # Copy source files
 cp -a ../src/bin/. $final_path/bin
 cp -a ../src/lib/. $final_path/lib
