@@ -68,7 +68,18 @@ ynh_mysql_connect_as $db_name $db_pwd $db_name < ./db.sql
 
 # Define and install dependencies
 ynh_install_app_dependencies $pkg_dependencies
+Recheck local
+#Check & regen local
+for i in $lang ; do
+ ynh_replace_string "# $i" "$i" /etc/locale.gen
+done
+locale-gen
 
+#=================================================
+# RESTORE POSTFIX ALIASES
+#=================================================
+
+ynh_restore_file $postfix
 
 #=================================================
 # RESTORE THE CRON FILE
@@ -76,12 +87,13 @@ ynh_install_app_dependencies $pkg_dependencies
 
 ynh_restore_file "/etc/cron.d/$app"
 
-
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
-# RELOAD NGINX AND PHP-FPM
+# RELOAD NGINX & ALIASES
 #=================================================
-
-systemctl reload php5-fpm
+sudo newaliases
 systemctl reload nginx
+systemctl reload postfix
+
+
