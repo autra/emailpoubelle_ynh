@@ -58,12 +58,15 @@ if [[ $?==0 ]]; then
   ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
   #setting conf file not world-readable (dude, there is a plain-text password !)
   sudo chmod o-r $final_path/conf.php
-  
-  #change nginx.conf as per https://forum.yunohost.org/t/need-help-on-nginx-conf-cannot-access-resources/6342
-  ynh_replace_string "alias $finalpath/www/ ;" "alias $finalpath/ ;" /etc/yunohost/$domain.d/$app.conf
-  ynh_replace_string "index index.php;" "index www/ndex.php;" /etc/yunohost/$domain.d/$app.conf
-  
+    
 fi
+
+#change nginx.conf as per https://forum.yunohost.org/t/need-help-on-nginx-conf-cannot-access-resources/6342
+ynh_replace_string "alias $finalpath/www/ ;" "alias $finalpath/ ;" /etc/yunohost/$domain.d/$app.conf
+ynh_replace_string "index index.php;" "index www/ndex.php;" /etc/yunohost/$domain.d/$app.conf
+
+#correct template name in index.php
+ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
