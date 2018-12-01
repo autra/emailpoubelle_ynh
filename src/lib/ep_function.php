@@ -79,7 +79,13 @@ function AjouterAlias($status, $alias,$email, $life, $comment) {
 		die();
 	}
 	UpdateVirtualDB();
-	return $dbco->lastInsertId();
+	if (preg_match('/^sqlite/', DB)) {
+		return $dbco->lastInsertId();
+	} else {
+		$stmt = $dbco->query("SELECT LAST_INSERT_ID()");
+		return $stmt->fetchColumn();
+	}
+
 }
 
 // delete email

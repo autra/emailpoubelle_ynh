@@ -28,7 +28,7 @@ TODO :
 
 [ ] remove new locale on remove
 
-[ ] Why the flag don't show??
+[X] Why the flag don't show??
 
 [X] Implement Admin panel
 

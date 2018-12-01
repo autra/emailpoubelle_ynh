@@ -60,8 +60,15 @@ if [[ $?==0 ]]; then
   ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
   #setting conf file not world-readable (dude, there is a plain-text password !)
   sudo chmod o-r $final_path/conf.php
-  
+    
 fi
+
+#change nginx.conf as per https://forum.yunohost.org/t/need-help-on-nginx-conf-cannot-access-resources/6342
+ynh_replace_string "alias $finalpath/www/ ;" "alias $finalpath/ ;" /etc/yunohost/$domain.d/$app.conf
+ynh_replace_string "index index.php;" "index www/ndex.php;" /etc/yunohost/$domain.d/$app.conf
+
+#correct template name in index.php
+ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
@@ -83,10 +90,14 @@ cp ../src/README.md $final_path/README.md
 cp ../src/CHANGELOG.md $final_path/CHANGELOG.md
 cp ../src/conf-dist.php $final_path/conf-dist.php
 cp ../conf/index_source.php $final_path/www/index.php
-
+test -e $final_path/template-exemple
+if [[ ! $? -eq 0 ]]; then
+  ln -s $final_path/www/template-exemple $final_path/template-exemple
+fi
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
 ln -s $final_path/lang/it $final_path/lang/it_IT
+
 
 chown -R www-data:www-data $final_path
 
