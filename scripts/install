@@ -74,6 +74,7 @@ ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
 ln -s $final_path/lang/it $final_path/lang/it_IT
+ln -s $final_path/www/template-exemple $final_path/template-exemple
 
 
 #===============================================
