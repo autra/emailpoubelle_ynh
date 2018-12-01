@@ -88,10 +88,14 @@ cp ../src/README.md $final_path/README.md
 cp ../src/CHANGELOG.md $final_path/CHANGELOG.md
 cp ../src/conf-dist.php $final_path/conf-dist.php
 cp ../conf/index_source.php $final_path/www/index.php
-
+test -e $final_path/template-exemple
+if [[ ! $? -eq 0 ]]; then
+  ln -s $final_path/www/template-exemple $final_path/template-exemple
+fi
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
 ln -s $final_path/lang/it $final_path/lang/it_IT
+
 
 chown -R www-data:www-data $final_path
 
