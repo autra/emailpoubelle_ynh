@@ -12,30 +12,20 @@ Of course, once uninstalled, everything get back to normal.
 
 TODO : 
 ------
-[X] move to 2.0
-
-[ ] check nginx conf
-
-[X] insert clean index.php
-
-[ ] insert cron in conf
-
-[ ] insert symlink for langages in /lang
-
-[X] check dependency for lang
-
-[X] remove php-geoip 
-
-[ ] remove new locale on remove
-
-[X] Why the flag don't show??
-
-[X] Implement Admin panel
-
-[X] Add backup restore script
-
-[ ] check checksum on download
-
-[ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
-
-[ ] cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app
+- [X] move to 2.0
+- [ ] check nginx conf
+- [X] insert clean index.php
+- [ ] insert cron in conf
+- [ ] insert symlink for langages in /lang
+- [X] check dependency for lang
+- [X] remove php-geoip 
+- [ ] remove new locale on remove
+- [X] Why the flags don't show??
+- [X] Implement Admin panel
+- [X] Add backup restore script
+- [ ] check checksum on download
+- [ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
+- [ ] cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app
+- [ ] package_check integration
+- [ ] Multiinstance
+- [ ] LDAP
