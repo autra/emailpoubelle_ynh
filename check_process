@@ -4,7 +4,7 @@
 		domain="domain.tld"	(DOMAIN)
 		path="/poubelle"	(PATH)
 		admin="john"	(USER)
-		is_public=0	(PUBLIC|public=1|private=0)
+		is_public=1	(PUBLIC|public=1|private=0)
 		password="password"
 	; Checks
 		pkg_linter=1
