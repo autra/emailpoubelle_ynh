@@ -7,19 +7,46 @@
 #=================================================
 source _common.sh
 source /usr/share/yunohost/helpers
+
+
 #=================================================
 # LOAD SETTINGS
 #=================================================
 
 app=$YNH_APP_INSTANCE_NAME
-
 domain=$(ynh_app_setting_get $app domain)
 path_url=$(ynh_app_setting_get $app path)
 admin=$(ynh_app_setting_get $app admin)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
 
+
+#=================================================
+# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
+#=================================================
+
+# Backup the current version of the app
+ynh_backup_before_upgrade
+ynh_clean_setup () {
+	# restore it if the upgrade fails
+	ynh_restore_upgradebackup
+}
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+
+#=================================================
+# CHECK THE PATH
+#=================================================
+
+# Normalize the URL path syntax
+path_url=$(ynh_normalize_url_path $path_url)
+
+
+#=================================================
 #check for matlink's version
+#=================================================
+
 cat /etc/yunohost/apps/$app/status.json | grep "matlink"
 if [[ $?==0 ]]; then
   #add missing info in settings
@@ -61,12 +88,19 @@ if [[ $?==0 ]]; then
     
 fi
 
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
 #change nginx.conf as per https://forum.yunohost.org/t/need-help-on-nginx-conf-cannot-access-resources/6342
 ynh_replace_string "alias $finalpath/www/ ;" "alias $finalpath/ ;" /etc/yunohost/$domain.d/$app.conf
 ynh_replace_string "index index.php;" "index www/ndex.php;" /etc/yunohost/$domain.d/$app.conf
 
 #correct template name in index.php
 ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
+
+
 
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
@@ -106,7 +140,9 @@ chown -R www-data:www-data $final_path
 #sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle 
 #sudo chmod 644 /etc/cron.d/emailpoubelle 
 
-# Restart services
+#=================================================
+# RELOAD SERVICES
+#=================================================
 systemctl restart php7.0-fpm 
 systemctl reload nginx
 systemctl reload postfix
