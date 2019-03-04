@@ -34,7 +34,7 @@ or
 sudo yunohost app upgrade emailpoubelle -u https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing --debug
 ```
 
-##TODO : 
+## TODO : 
 
 - [ ] check nginx conf
 - [ ] insert cron in conf
@@ -47,6 +47,6 @@ sudo yunohost app upgrade emailpoubelle -u https://github.com/Yunohost-Apps/emai
 - [ ] Multiinstance
 - [ ] LDAP
 
-##LICENCE
+## LICENCE
 
 Package and software are GPL 3.0
