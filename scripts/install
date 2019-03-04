@@ -66,8 +66,10 @@ locale-gen
 #INSTALL SOURCES
 #===============================================
 # Copy source files
-sudo mkdir -p $final_path
-sudo cp -R ../src/* $final_path
+
+ynh_print_info "Downloading sources to $final_path"
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
 sudo cp ../conf/index_source.php $final_path/www/index.php
 ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
@@ -106,9 +108,9 @@ sudo chmod o-r $final_path/conf.php
 ynh_mysql_create_db $db_user $db_user $db_pwd 
 
 #setting postfix to use virtual aliases file
-sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
-ynh_replace_string "^virtual_alias_maps" "#virtual_alias_maps" $postfix
-echo  "virtual_alias_maps = hash:$final_path/var/virtual" | sudo tee -a $postfix
+# Add postfix configuration hook and regen postfix conf
+cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/hooks/conf_regen/
+yunohost service regen-conf postfix
 
 #create the virtual aliases file 
 sudo touch $final_path/var/virtual
@@ -133,11 +135,18 @@ sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
 # Create a dedicated nginx config
 #ynh_add_nginx_config
 
-# If app is public, add url to SSOWat conf as skipped_uris
-if [ "$is_public" = "Yes" ];
+
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+# Make app public if necessary
+if [ $is_public -eq 1 ]
 then
-sudo yunohost app setting $app skipped_uris -v "/"
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set $app unprotected_uris "/"
 fi
+
 
 #A verifier? A integrer dans dépendances?
 #adding php-cli for cron

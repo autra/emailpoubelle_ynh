@@ -46,47 +46,47 @@ path_url=$(ynh_normalize_url_path $path_url)
 #=================================================
 #check for matlink's version
 #=================================================
-
-cat /etc/yunohost/apps/$app/status.json | grep "matlink"
-if [[ $?==0 ]]; then
+#deprecated - not maintained for more than a year...
+#cat /etc/yunohost/apps/$app/status.json | grep "matlink"
+#if [[ $?==0 ]]; then
   #add missing info in settings
-  final_path=/var/www/$app
-  db_name=emailPoubelle
-  ynh_app_setting_set $app db_name $db_name
-  ynh_app_setting_set $app final_path $final_path
+#  final_path=/var/www/$app
+#  db_name=emailPoubelle
+#  ynh_app_setting_set $app db_name $db_name
+#  ynh_app_setting_set $app final_path $final_path
   #install geoip dependencies
-  ynh_install_app_dependencies $pkg_dependencies
+#  ynh_install_app_dependencies $pkg_dependencies
   #install locale packages
-  for i in $lang ; do
-    ynh_replace_string "# $i" "$i" /etc/locale.gen
-  done
-  locale-gen
+#  for i in $lang ; do
+#    ynh_replace_string "# $i" "$i" /etc/locale.gen
+#  done
+#  locale-gen
   #change folder locale => lang as per src2.0
-  rm -rf $final_path/locale
-  mkdir -p $final_path/lang
+#  rm -rf $final_path/locale
+#  mkdir -p $final_path/lang
   #add new index.php
-  cp ../conf/index_source.php $final_path/www/index.php
+#  cp ../conf/index_source.php $final_path/www/index.php
   
   #switch from previous (modified) conf.php to new one (emailpoubelle original)
-  cp ../src/conf-dist.php $final_path/conf-dist.new.php
+#  cp ../src/conf-dist.php $final_path/conf-dist.new.php
   #insert domain in line 24, DB in line 31, DBUSER in line 32, etc.
-  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DOMAIN',")
-  sed -i "24s/.*/${rep}/" $final_path/conf-dist.new.php
-  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DB',")
-  sed -i "31s/.*/${rep}/" $final_path/conf-dist.new.php
-  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBUSER',")
-  sed -i "32s/.*/${rep}/" $final_path/conf-dist.new.php
-  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBPASS',")
-  sed -i "33s/.*/${rep}/" $final_path/conf-dist.new.php
+#  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DOMAIN',")
+#  sed -i "24s/.*/${rep}/" $final_path/conf-dist.new.php
+#  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DB',")
+#  sed -i "31s/.*/${rep}/" $final_path/conf-dist.new.php
+#  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBUSER',")
+#  sed -i "32s/.*/${rep}/" $final_path/conf-dist.new.php
+#  rep=$(cat $final_path/conf.php | grep "^[^//]" | grep "define('DBPASS',")
+#  sed -i "33s/.*/${rep}/" $final_path/conf-dist.new.php
   #replace old conf and process with install command
-  mv $final_path/conf.php $final_path/conf.php.old 
-  mv $final_path/conf-dist.new.php $final_path/conf.php
-  ynh_replace_string "define('DB', 'sqlite:'" "//define('DB', 'sqlite:'" $final_path/conf.php
-  ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
-  #setting conf file not world-readable (dude, there is a plain-text password !)
-  sudo chmod o-r $final_path/conf.php
+#  mv $final_path/conf.php $final_path/conf.php.old 
+#  mv $final_path/conf-dist.new.php $final_path/conf.php
+#  ynh_replace_string "define('DB', 'sqlite:'" "//define('DB', 'sqlite:'" $final_path/conf.php
+#  ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
+#  #setting conf file not world-readable (dude, there is a plain-text password !)
+#  sudo chmod o-r $final_path/conf.php
     
-fi
+#fi
 
 
 #=================================================
@@ -101,7 +101,6 @@ ynh_replace_string "index index.php;" "index www/ndex.php;" /etc/yunohost/$domai
 ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
 
-
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
 if [ -z $db_pass]; then
@@ -112,15 +111,9 @@ if [ -z $db_pass]; then
 fi
 
 # Copy source files
-cp -a ../src/bin/. $final_path/bin
-cp -a ../src/lib/. $final_path/lib
-cp -a ../src/lang/. $final_path/lang
-cp -a ../src/www/. $final_path/www
-cp ../src/emailPoubelle.php $final_path/emailPoubelle.php
-cp ../src/emailPoubelleAdmin.php $final_path/emailPoubelleAdmin.php
-cp ../src/README.md $final_path/README.md
-cp ../src/CHANGELOG.md $final_path/CHANGELOG.md
-cp ../src/conf-dist.php $final_path/conf-dist.php
+ynh_print_info "Downloading sources to $final_path"
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
 cp ../conf/index_source.php $final_path/www/index.php
 test -e $final_path/template-exemple
 if [[ ! $? -eq 0 ]]; then

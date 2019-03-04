@@ -12,6 +12,7 @@ Of course, once uninstalled, everything get back to normal.
 
 TODO : 
 ------
+
 - [X] move to 2.0
 - [ ] check nginx conf
 - [X] insert clean index.php

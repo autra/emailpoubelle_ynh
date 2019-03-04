@@ -1,9 +1,0 @@
-/postfix
-virtual
-virtual.db
-checkupdate
-conf.php
-test*
-var/database*
-var/.htaccess
-devToProd.sh

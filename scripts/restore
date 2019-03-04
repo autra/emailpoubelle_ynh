@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 #=================================================
 # GENERIC START
 #=================================================
@@ -81,8 +81,9 @@ locale-gen
 #=================================================
 # RESTORE POSTFIX ALIASES
 #=================================================
+cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/hooks/conf_regen/
+yunohost service regen-conf postfix
 
-ynh_restore_file $postfix
 
 #=================================================
 # RESTORE THE CRON FILE

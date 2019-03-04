@@ -62,5 +62,4 @@ ynh_backup "/etc/cron.d/$app"
 # BACKUP POSTFIX & ALIASES
 #=================================================
 
-ynh_backup $postfix
 ynh_backup /etc/aliases
