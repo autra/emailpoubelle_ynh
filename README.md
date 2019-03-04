@@ -1,4 +1,5 @@
 #Emailpoubelle
+
 [![Integration level](https://dash.yunohost.org/integration/emailpoubelle.svg)](https://ci-apps.yunohost.org/jenkins/job/emailpoubelle%20%28Community%29/lastBuild/consoleFull)  
 [![Install emailpoubelle with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=emailpoubelle)
 
@@ -8,6 +9,7 @@ EmailPoubelle (Trash email) is a script to create temporay email adresses that a
 All thanks to David. 
 
 ##WARNING
+
 Using this will cause to disable the Yunohost ldap aliases ! Once installed, you won't be able to use the aliasses settings that you can see when you modify your personnal settings in the SSOWAT pannel.
 Of course, once uninstalled, everything get back to normal. 
 
@@ -38,10 +40,12 @@ sudo yunohost app upgrade calibreweb -u https://github.com/Yunohost-Apps/emailpo
 - [ ] insert symlink for langages in /lang
 - [ ] remove new locale on remove
 - [ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
-- [ ] cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app
+- [ ] cron job to remove redirections (`0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) 
+- [ ] conflict with SSOWAT + non-public app
 - [ ] package_check integration
 - [ ] Multiinstance
 - [ ] LDAP
 
 ##LICENCE
+
 Package and software are GPL 3.0
