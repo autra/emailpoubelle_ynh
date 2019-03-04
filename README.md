@@ -31,7 +31,7 @@ To try the testing branch, please proceed like that.
 ```
 sudo yunohost app install https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing --debug
 or
-sudo yunohost app upgrade calibreweb -u https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing --debug
+sudo yunohost app upgrade emailpoubelle -u https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing --debug
 ```
 
 ##TODO : 
