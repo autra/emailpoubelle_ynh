@@ -1,5 +1,8 @@
 #!/bin/bash
 
+source /usr/share/yunohost/helpers
+final_path=$(ynh_app_setting_get emailpoubelle final_path)
+
 set -e
 
 do_pre_regen() {
@@ -11,8 +14,7 @@ do_pre_regen() {
   # FIXME : check this file actually exists to not crash when only running this
   # hook alone
 
-  sudo sed -e "s@^alias_maps\s*=\s*\(.*\)@alias_maps = \1,hash:/var/lib/mailman/data/aliases@"\
-           -e "s@^virtual_alias_maps\s*=\s*\(.*\)@virtual_alias_maps = hash:/var/lib/mailman/data/virtual-mailman,\1@"\
+  sudo sed -e "s@^virtual_alias_maps\s*=\s*\(.*\)@virtual_alias_maps = hash:$final_path/var/virtual,\1@"\
            -i $postfix_main_cf
 
 }
