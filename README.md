@@ -36,12 +36,12 @@ sudo yunohost app upgrade emailpoubelle -u https://github.com/Yunohost-Apps/emai
 
 ## TODO : 
 
-- [ ] check nginx conf
+- [X] check nginx conf
 - [ ] insert cron in conf
 - [ ] insert symlink for langages in /lang
 - [ ] remove new locale on remove
 - [ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
-- [ ] cron job to remove redirections (`0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) 
+- [X] cron job to remove redirections (`0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) 
 - [ ] conflict with SSOWAT + non-public app
 - [ ] package_check integration
 - [ ] Multiinstance

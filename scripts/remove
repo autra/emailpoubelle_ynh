@@ -8,7 +8,6 @@ domain=$(ynh_app_setting_get $app domain)
 db_name=$(ynh_app_setting_get $app db_name)
 db_user==$db_name
 root_pwd=$(sudo cat /etc/yunohost/mysql)
-postfix=/etc/postfix/main.cf
 
 #remove php-geoip
 ynh_remove_app_dependencies
@@ -26,6 +25,6 @@ ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle
 
 #remove cronjob
 sudo rm -f /etc/cron.d/emailpoubelle
-sudo service postfix reload
+yunohost service regen-conf postfix
 sudo service nginx reload
 sudo yunohost app ssowatconf

@@ -38,13 +38,12 @@ ynh_abort_if_errors
 #=================================================
 # CHECK THE PATH
 #=================================================
-
 # Normalize the URL path syntax
 path_url=$(ynh_normalize_url_path $path_url)
 
 
 #=================================================
-#check for matlink's version
+#check for matlink's version - deprecated - uninstall & reinstall
 #=================================================
 #deprecated - not maintained for more than a year...
 #cat /etc/yunohost/apps/$app/status.json | grep "matlink"
@@ -66,7 +65,6 @@ path_url=$(ynh_normalize_url_path $path_url)
 #  mkdir -p $final_path/lang
   #add new index.php
 #  cp ../conf/index_source.php $final_path/www/index.php
-  
   #switch from previous (modified) conf.php to new one (emailpoubelle original)
 #  cp ../src/conf-dist.php $final_path/conf-dist.new.php
   #insert domain in line 24, DB in line 31, DBUSER in line 32, etc.
@@ -85,21 +83,13 @@ path_url=$(ynh_normalize_url_path $path_url)
 #  ynh_replace_string "define('ALIASLIMITBYMAIL" "//define('ALIASLIMITBYMAIL" $final_path/conf.php
 #  #setting conf file not world-readable (dude, there is a plain-text password !)
 #  sudo chmod o-r $final_path/conf.php
-    
 #fi
 
-
 #=================================================
-# NGINX CONFIGURATION
+#INSTALL DEPENDENCIES
 #=================================================
-
-#change nginx.conf as per https://forum.yunohost.org/t/need-help-on-nginx-conf-cannot-access-resources/6342
-ynh_replace_string "alias $finalpath/www/ ;" "alias $finalpath/ ;" /etc/yunohost/$domain.d/$app.conf
-ynh_replace_string "index index.php;" "index www/ndex.php;" /etc/yunohost/$domain.d/$app.conf
-
-#correct template name in index.php
-ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
-
+ynh_print_info "Installing dependencies"
+ynh_install_app_dependencies $pkg_dependencies
 
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
@@ -110,6 +100,9 @@ if [ -z $db_pass]; then
   ynh_app_setting_set $app mysqlpwd $db_pass
 fi
 
+#=================================================
+#INSTALL SOURCES
+#===============================================
 # Copy source files
 ynh_print_info "Downloading sources to $final_path"
 # Download, check integrity, uncompress and patch the source from app.src
@@ -126,12 +119,6 @@ ln -s $final_path/lang/it $final_path/lang/it_IT
 
 chown -R www-data:www-data $final_path
 
-#adding php-cli for cron
-#sudo apt-get update -qq 
-#sudo apt-get install -yqq php5-cli
-#adding cronjob for removing expired email addresses
-#sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle 
-#sudo chmod 644 /etc/cron.d/emailpoubelle 
 
 #=================================================
 # RELOAD SERVICES
