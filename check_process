@@ -12,6 +12,7 @@
 		setup_root=1
 		setup_private=1
 		setup_public=1
+		upgrade=1	from_commit=bc3f24c8e5d1cf93f9069cf235177ddf0cc078bc
 		upgrade=1
 		backup_restore=1
 		multi_instance=0
