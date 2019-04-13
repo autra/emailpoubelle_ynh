@@ -16,7 +16,7 @@ ynh_secure_remove /var/www/$app
 #removing nginx conf
 ynh_remove_nginx_config
 #removing aliases
-sed -i "/devnull:\/dev\/null/d" /etc/aliases
+ynh_replace_string "/devnull:\/dev\/null/d" /etc/aliases
 newaliases
 # Remove hook for postfix conf
 ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
