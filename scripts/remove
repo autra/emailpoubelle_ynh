@@ -4,27 +4,25 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 
-domain=$(ynh_app_setting_get $app domain)
 db_name=$(ynh_app_setting_get $app db_name)
 db_user==$db_name
-root_pwd=$(sudo cat /etc/yunohost/mysql)
 
 #remove php-geoip
 ynh_remove_app_dependencies
 #removing emailpoubelle database
 ynh_mysql_remove_db $db_user $db_name
 #removing emailpoubelle directory
-sudo rm -rf /var/www/emailpoubelle
+ynh_secure_remove /var/www/$app
 #removing nginx conf
-sudo rm -f /etc/nginx/conf.d/$domain.d/emailpoubelle.conf
+ynh_remove_nginx_config
 #removing aliases
-sudo sed -i "/devnull:\/dev\/null/d" /etc/aliases
-sudo newaliases
+sed -i "/devnull:\/dev\/null/d" /etc/aliases
+newaliases
 # Remove hook for postfix conf
 ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 
 #remove cronjob
-sudo rm -f /etc/cron.d/emailpoubelle
+rm -f /etc/cron.d/emailpoubelle
 yunohost service regen-conf postfix
-sudo service nginx reload
-sudo yunohost app ssowatconf
+service nginx reload
+yunohost app ssowatconf

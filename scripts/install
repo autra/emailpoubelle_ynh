@@ -71,7 +71,7 @@ locale-gen
 ynh_print_info "Downloading sources to $final_path"
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
-sudo cp ../conf/index_source.php $final_path/www/index.php
+cp ../conf/index_source.php $final_path/www/index.php
 ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
 #Temporaire - mettre en config
@@ -92,7 +92,7 @@ ynh_app_setting_set $app mysqlpwd $db_pwd
 ynh_print_ON
 
 #configuring with given settings
-sudo cp $final_path/conf-dist.php $final_path/conf.php
+cp $final_path/conf-dist.php $final_path/conf.php
 #Update various conf : domain, database, user and password
 ynh_replace_string "exemple.fr"                  "$domain"                    $final_path/conf.php
 ynh_replace_string "exemple.com"                 "$domain"                    $final_path/conf.php
@@ -108,7 +108,7 @@ ynh_replace_string "motdepassedefou"             "$db_pwd"                    $f
 ynh_replace_string "define('ADMIN_PASSWORD', 'admin');" "define('ADMIN_PASSWORD', '$password');" $final_path/conf.php
 ynh_print_ON
 #setting conf file not world-readable (dude, there is a plain-text password !)
-sudo chmod o-r $final_path/conf.php
+chmod o-r $final_path/conf.php
 #initialize database (databasename = db_user)
 ynh_print_OFF
 ynh_mysql_create_db $db_user $db_user $db_pwd 
@@ -120,18 +120,18 @@ cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/h
 yunohost service regen-conf postfix
 
 #create the virtual aliases file 
-sudo touch $final_path/var/virtual
-sudo postmap $final_path/var/virtual
-sudo chown -R www-data:www-data $final_path
+touch $final_path/var/virtual
+postmap $final_path/var/virtual
+chown -R www-data:www-data $final_path
 
 #create an alias for deleted junk adresses
-sudo cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
-sudo echo "devnull:/dev/null" | sudo tee -a /etc/aliases
-sudo newaliases
+cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
+echo "devnull:/dev/null" | tee -a /etc/aliases
+newaliases
 
 #adding cronjob for removing expired email addresses
-sudo cp -a ../conf/$app.cron /etc/cron.d/$app
-sudo chmod 644 /etc/cron.d/$app
+cp -a ../conf/$app.cron /etc/cron.d/$app
+chmod 644 /etc/cron.d/$app
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -150,6 +150,6 @@ fi
 # Restart services
 systemctl reload nginx
 systemctl reload postfix
-sudo service php* reload
-sudo yunohost app ssowatconf
+service php* reload
+yunohost app ssowatconf
  

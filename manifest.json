@@ -51,7 +51,10 @@
                     "en": "Choose an admin user for emailpoubelle",
                     "fr": "Choisissez un administrateur pour emailpoubelle"
                 },
-                "example": "homer"
+                "example": "homer",
+                "help": {
+                	"en": "Admin user can access to the control panel, block and remove all redirection and reset any settings",
+                	"fr": "L'administrateur peut accéder au panneau de controle, bloquer et supprimer les redirections ainsi que réinitialiser les réglages"},
             },
             {
                 "name": "password",
@@ -69,7 +72,10 @@
                     "en": "Is it a public application?",
                     "fr": "Est-ce une application publique ?"
                 },
-                "default": false
+                "default": false,
+                "help": {
+                	"en": "The app can be accessed outside Yunohost and anyone will be able to create a trash email adress"
+                	"fr": "L'application sera accessible en dehors de yunohost et n'importe qui pourra y créer une adresse poubelle"},
             }
         ]
     }

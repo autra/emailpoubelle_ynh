@@ -126,4 +126,4 @@ chown -R www-data:www-data $final_path
 systemctl restart php7.0-fpm 
 systemctl reload nginx
 systemctl reload postfix
-sudo yunohost app ssowatconf
+yunohost app ssowatconf
