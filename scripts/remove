@@ -1,28 +1,110 @@
 #!/bin/bash
 
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
 source _common.sh
 source /usr/share/yunohost/helpers
 
+#=================================================
+# LOAD SETTINGS
+#=================================================
+ynh_print_info --message="Loading installation settings..."
 
-db_name=$(ynh_app_setting_get $app db_name)
-db_user==$db_name
+app=$YNH_APP_INSTANCE_NAME
 
-#remove php-geoip
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+port=$(ynh_app_setting_get --app=$app --key=port)
+db_name=$(ynh_app_setting_get --app=$app --key=db_name)
+db_user=$db_name
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+
+
+
+#=================================================
+# REMOVE THE MYSQL DATABASE
+#=================================================
+ynh_print_info --message="Removing the MySQL database"
+
+# Remove a database if it exists, along with the associated user
+ynh_mysql_remove_db --db_user=$db_user --db_name=$db_name
+
+
+
+#=================================================
+# REMOVE DEPENDENCIES
+#=================================================
+ynh_print_info --message="Removing dependencies"
+
+# Remove metapackage and its dependencies
 ynh_remove_app_dependencies
-#removing emailpoubelle database
-ynh_mysql_remove_db $db_user $db_name
-#removing emailpoubelle directory
-ynh_secure_remove /var/www/$app
-#removing nginx conf
+
+
+
+#=================================================
+# REMOVE APP MAIN DIR
+#=================================================
+ynh_print_info --message="Removing app main directory"
+
+# Remove the app directory securely
+ynh_secure_remove --file="$final_path"
+
+
+#=================================================
+# REMOVE NGINX CONFIGURATION
+#=================================================
+ynh_print_info --message="Removing nginx web server configuration"
+
+# Remove the dedicated nginx config
 ynh_remove_nginx_config
+
+#=================================================
+# REMOVE PHP-FPM CONFIGURATION
+#=================================================
+ynh_print_info --message="Removing php-fpm configuration"
+
+# Remove the dedicated php-fpm config
+ynh_remove_fpm_config
+
+
+#=================================================
+# SPECIFIC REMOVE
+#=================================================
+# REMOVE THE CRON FILE
+#=================================================
+
+# Remove a cron file
+ynh_secure_remove --file="/etc/cron.d/$app"
+
+# Remove a directory securely
+ynh_secure_remove --file="/etc/$app/"
+
+# Remove the log files
+ynh_secure_remove --file="/var/log/$app/"
+
+
+#=================================================
 #removing aliases
+#=================================================
 ynh_replace_string "/devnull:\/dev\/null/d" /etc/aliases
 newaliases
 # Remove hook for postfix conf
 ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 
-#remove cronjob
-rm -f /etc/cron.d/emailpoubelle
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# REMOVE DEDICATED USER
+#=================================================
+ynh_print_info --message="Removing the dedicated system user"
+
+# Delete a system user
+ynh_system_user_delete --username=$app
+
+
 yunohost service regen-conf postfix
 service nginx reload
 yunohost app ssowatconf
