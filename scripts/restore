@@ -32,6 +32,7 @@ domain=$(ynh_app_setting_get $app domain)
 path_url=$(ynh_app_setting_get $app path)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
+admin=$(ynh_app_setting_get $app admin)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
@@ -41,6 +42,9 @@ ynh_webpath_available $domain $path_url \
 	|| ynh_die "Path not available: ${domain}${path_url}"
 test ! -d $final_path \
 	|| ynh_die "There is already a directory: $final_path "
+
+# Check user
+ynh_user_exists "$admin"
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -78,12 +82,23 @@ for i in $lang ; do
 done
 locale-gen
 
+#Temporaire - mettre en config
+ln -s $final_path/lang/fr $final_path/lang/fr_FR
+ln -s $final_path/lang/it $final_path/lang/it_IT
+ln -s $final_path/www/template-exemple $final_path/template-exemple
+
 #=================================================
 # RESTORE POSTFIX ALIASES
 #=================================================
 cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/hooks/conf_regen/
 yunohost service regen-conf postfix
 
+#create an alias for deleted junk adresses
+if ! [ grep "devnull:/dev/null" /etc/aliases ] ; then
+  cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
+  echo "devnull:/dev/null" | tee -a /etc/aliases
+  newaliases
+fi
 
 #=================================================
 # RESTORE THE CRON FILE
@@ -96,7 +111,7 @@ ynh_restore_file "/etc/cron.d/$app"
 #=================================================
 # RELOAD NGINX & ALIASES
 #=================================================
-newaliases
+postmap $final_path/var/virtual
 systemctl reload nginx
 systemctl restart php7.0-fpm
 systemctl reload postfix
