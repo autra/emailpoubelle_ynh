@@ -67,17 +67,18 @@ ynh_remove_nginx_config
 # REMOVE THE CRON FILE
 #=================================================
 
-# Remove a cron file
 ynh_secure_remove --file="/etc/cron.d/$app"
-sleep 1s
+
 #=================================================
 #removing aliases
 #=================================================
 ynh_replace_string "devnull:/dev/null" "" /etc/aliases
-sleep 1s
 newaliases
-sleep 1s
+
+#=================================================
 # Remove hook for postfix conf
+#=================================================
+
 ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 
 #=================================================
@@ -85,11 +86,6 @@ ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle
 #=================================================
 # REMOVE DEDICATED USER
 #=================================================
-ynh_print_info --message="Removing the dedicated system user"
-
-# Delete a system user
-ynh_system_user_delete --username=$app
-
 
 yunohost service regen-conf postfix
 service nginx reload
