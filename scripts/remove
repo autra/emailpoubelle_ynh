@@ -73,7 +73,7 @@ sleep 1s
 #=================================================
 #removing aliases
 #=================================================
-ynh_replace_string "/devnull:\/dev\/null/d" "" /etc/aliases
+ynh_replace_string "/devnull:/dev/null" /etc/aliases
 sleep 1s
 newaliases
 sleep 1s
