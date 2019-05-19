@@ -69,19 +69,14 @@ ynh_remove_nginx_config
 
 # Remove a cron file
 ynh_secure_remove --file="/etc/cron.d/$app"
-
-# Remove a directory securely
-ynh_secure_remove --file="/etc/$app/"
-
-# Remove the log files
-ynh_secure_remove --file="/var/log/$app/"
-
-
+sleep 1s
 #=================================================
 #removing aliases
 #=================================================
 ynh_replace_string "/devnull:\/dev\/null/d" /etc/aliases
+sleep 1s
 newaliases
+sleep 1s
 # Remove hook for postfix conf
 ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 
