@@ -89,4 +89,4 @@ ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle
 
 yunohost service regen-conf postfix
 service nginx reload
-yunohost app ssowatconf
+

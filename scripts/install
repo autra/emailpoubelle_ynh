@@ -56,11 +56,12 @@ ynh_app_setting_set $app final_path $final_path
 #=================================================
 ynh_print_info "Installing dependencies"
 ynh_install_app_dependencies $pkg_dependencies
-
+sleep 1s
 #install locale (nginx will restart at the end of the install)
 for i in $lang ; do
  ynh_replace_string "# $i" "$i" /etc/locale.gen
 done
+sleep 1s
 locale-gen
 
 #=================================================
@@ -151,5 +152,4 @@ fi
 systemctl reload nginx
 systemctl reload postfix
 service php* reload
-yunohost app ssowatconf
- 
+
