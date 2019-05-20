@@ -93,7 +93,7 @@ ynh_install_app_dependencies $pkg_dependencies
 
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
-if [ -z $db_pass]; then
+if [ -z $db_pass ]; then
 #c'est moche mais ça fera bien l'affaire - en deux lignes sinon pb en fonction du type de shell
   t=$(cat /var/www/$app/conf.php | grep DBPASS)
   db_pass=${t:26:24}
