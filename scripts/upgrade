@@ -169,9 +169,12 @@ if [[ ! $? -eq 0 ]]; then
 fi
 
 #Temporaire - mettre en config
+if [ ! -e $final_path/lang/fr_FR ]; then
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
+fi
+if [ ! -e $final_path/lang/it_IT ]; then
 ln -s $final_path/lang/it $final_path/lang/it_IT
-
+fi
 
 
 #=================================================
