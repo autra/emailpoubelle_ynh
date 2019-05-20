@@ -16,9 +16,48 @@ source /usr/share/yunohost/helpers
 app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get $app domain)
 path_url=$(ynh_app_setting_get $app path)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 admin=$(ynh_app_setting_get $app admin)
 final_path=$(ynh_app_setting_get $app final_path)
 db_name=$(ynh_app_setting_get $app db_name)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+
+### This helper will compare the version of the currently installed app and the version of the upstream package.
+### $upgrade_type can have 2 different values
+### - UPGRADE_APP if the upstream app version has changed
+### - UPGRADE_PACKAGE if only the YunoHost package has changed
+### ynh_check_app_version_changed will stop the upgrade if the app is up to date.
+### UPGRADE_APP should be used to upgrade the core app only if there's an upgrade to do.
+### Not used yet in this script
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+
+# Fix is_public as a boolean value
+if [ "$is_public" = "Yes" ]; then
+	ynh_app_setting_set --app=$app --key=is_public --value=1
+	is_public=1
+elif [ "$is_public" = "No" ]; then
+	ynh_app_setting_set --app=$app --key=is_public --value=0
+	is_public=0
+fi
+
+# If db_name doesn't exist, create it
+if [ -z "$db_name" ]; then
+	db_name=$(ynh_sanitize_dbid --db_name=$app)
+	ynh_app_setting_set --app=$app --key=db_name --value=$db_name
+fi
+
+# If final_path doesn't exist, create it
+if [ -z "$final_path" ]; then
+	final_path=/var/www/$app
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
 
 
 #=================================================
@@ -86,10 +125,26 @@ path_url=$(ynh_normalize_url_path $path_url)
 #fi
 
 #=================================================
-#INSTALL DEPENDENCIES
+# STANDARD UPGRADE STEPS
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_print_info "Upgrading nginx web server configuration..."
+
+ynh_backup_if_checksum_is_different "/etc/nginx/conf.d/$domain.d/$app.conf"
+
+# Create a dedicated nginx config
+ynh_add_nginx_config
+
+#=================================================
+# UPGRADE DEPENDENCIES
 #=================================================
 ynh_print_info "Installing dependencies"
 ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
+#UPDATE SETTINGS
+#=================================================
 
 #mysqlpwd setting was implemented in ynh2 - check if saved and if not implement
 db_pass=$(ynh_app_setting_get $app mysqlpwd)
@@ -103,7 +158,7 @@ fi
 #=================================================
 #INSTALL SOURCES
 #===============================================
-# Copy source files
+
 ynh_print_info "Downloading sources to $final_path"
 # Download, check integrity, uncompress and patch the source from app.src
 ynh_setup_source "$final_path"
@@ -112,10 +167,16 @@ test -e $final_path/template-exemple
 if [[ ! $? -eq 0 ]]; then
   ln -s $final_path/www/template-exemple $final_path/template-exemple
 fi
+
 #Temporaire - mettre en config
 ln -s $final_path/lang/fr $final_path/lang/fr_FR
 ln -s $final_path/lang/it $final_path/lang/it_IT
 
+
+
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
 
 chown -R www-data:www-data $final_path
 
@@ -123,6 +184,7 @@ chown -R www-data:www-data $final_path
 #=================================================
 # RELOAD SERVICES
 #=================================================
-systemctl restart php7.0-fpm 
-systemctl reload nginx
-systemctl reload postfix
+ynh_systemd_action --service_name=php7.0-fpm --action=restart
+ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemd_action --service_name=postfix --action=reload
+
