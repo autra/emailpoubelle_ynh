@@ -93,7 +93,7 @@ locale-gen
 #=================================================
 ynh_script_progression --message="Restore Postfix aliases..." --time --weight=1
 
-ynh_restore_file "/usr/share/yunohost/hooks/conf_regen/98-postfix_mailman"
+ynh_restore_file "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 yunohost service regen-conf postfix
 
 #create an alias for deleted junk adresses
