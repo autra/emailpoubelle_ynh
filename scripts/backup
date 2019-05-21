@@ -63,6 +63,12 @@ ynh_script_progression --message="Backing up cron configuration..." --time --wei
 
 ynh_backup --src_path="/etc/cron.d/$app"
 
+#=================================================
+# BACKUP postfix conf
+#=================================================
+ynh_script_progression --message="Backing up postfix conf configuration..." --time --weight=1
+
+ynh_backup "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 
 #=================================================
 # END OF SCRIPT
