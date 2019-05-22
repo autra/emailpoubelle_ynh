@@ -178,8 +178,11 @@ fi
 
 #setting postfix to use virtual aliases file
 # Add postfix configuration hook and regen postfix conf
+#setting postfix to use virtual aliases file
+# Add postfix configuration hook and regen postfix conf
 cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/hooks/conf_regen/
-yunohost service regen-conf postfix
+mv /etc/postfix/main.cf /etc/postfic/main.cf.emailpoubelle.bak
+yunohost service regen-conf postfix -f
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
