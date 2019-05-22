@@ -42,7 +42,6 @@ ynh_print_info --message="Removing dependencies"
 ynh_remove_app_dependencies
 
 
-
 #=================================================
 # REMOVE APP MAIN DIR
 #=================================================
@@ -88,5 +87,6 @@ ynh_secure_remove "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle
 #=================================================
 
 yunohost service regen-conf postfix
-service nginx reload
+ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemd_action --service_name=postfix --action=reload
 
