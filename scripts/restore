@@ -97,7 +97,7 @@ ynh_restore_file "/usr/share/yunohost/hooks/conf_regen/98-postfix_emailpoubelle"
 yunohost service regen-conf postfix
 
 #create an alias for deleted junk adresses
-if ! [ grep "devnull:/dev/null" /etc/aliases ] ; then
+if ! grep -q "devnull:/dev/null" /etc/aliases ; then
   cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
   echo "devnull:/dev/null" | tee -a /etc/aliases
   newaliases
@@ -107,7 +107,6 @@ fi
 # RESTORE THE CRON FILE
 #=================================================
 ynh_script_progression --message="Reinstall cron job" --time --weight=1
-
 
 ynh_restore_file "/etc/cron.d/$app"
 
