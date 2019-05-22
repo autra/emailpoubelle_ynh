@@ -82,7 +82,7 @@ path_url=$(ynh_normalize_url_path $path_url)
 
 
 #=================================================
-#check for matlink's version - deprecated - uninstall & reinstall
+#check for matlink's version - DEPRECATED - uninstall & reinstall
 #=================================================
 #deprecated - not maintained for more than a year...
 #cat /etc/yunohost/apps/$app/status.json | grep "matlink"
@@ -176,6 +176,10 @@ if [ ! -e $final_path/lang/it_IT ]; then
 ln -s $final_path/lang/it $final_path/lang/it_IT
 fi
 
+#setting postfix to use virtual aliases file
+# Add postfix configuration hook and regen postfix conf
+cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/hooks/conf_regen/
+yunohost service regen-conf postfix
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
