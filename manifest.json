@@ -7,14 +7,14 @@
         "fr": "Créez des adresses email jetables qui redirigent les mails vers votre adresse réelle"
     },
     "url": "https://framagit.org/kepon/emailPoubellePhp/",
-    "version": "2.0~ynh3",
+    "version": "2.0~ynh4",
     "license": "Beerware",
     "maintainer": {
         "name": "Krakinou",
         "email": "misterl56@hotmail.com"
     },
         "requirements": {
-        "yunohost": ">= 3.0.0"
+        "yunohost": ">= 3.5.2"
     },
     "multi_instance": false,
     "services": [
@@ -51,7 +51,11 @@
                     "en": "Choose an admin user for emailpoubelle",
                     "fr": "Choisissez un administrateur pour emailpoubelle"
                 },
-                "example": "homer"
+                "example": "homer",
+                "help": {
+                	"en": "Admin user can access to the control panel, block and remove all redirection and reset any settings",
+                	"fr": "L'administrateur peut accéder au panneau de controle, bloquer et supprimer les redirections ainsi que réinitialiser les réglages"
+                	}
             },
             {
                 "name": "password",
@@ -63,13 +67,17 @@
                 "example": "AveryStrongPassword"
             },
             {
-                "name": "public_site",
+                "name": "is_public",
+                "type": "boolean",
                 "ask": {
-                    "en": "Should this application be public ?",
-                    "fr": "Est-ce que cette application doit être visible publiquement ?"
+                    "en": "Is it a public application?",
+                    "fr": "Est-ce une application publique ?"
                 },
-                "choices": ["Yes", "No"],
-                "default": "No"
+                "default": false,
+                "help": {
+                	"en": "The app can be accessed outside Yunohost and anyone will be able to create a trash email adress",
+                	"fr": "L'application sera accessible en dehors de yunohost et n'importe qui pourra y créer une adresse poubelle"
+                	}
             }
         ]
     }

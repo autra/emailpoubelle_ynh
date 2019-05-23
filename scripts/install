@@ -15,16 +15,17 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 admin=$YNH_APP_ARG_ADMIN
+ynh_print_OFF
 password=$YNH_APP_ARG_PASSWORD
+ynh_print_ON
 is_public=$5
 final_path=/var/www/$app
 db_user=emailPoubelle
-cronline="0 */2 * * * www-data cd $final_path/www/; /usr/bin/php index.php > /dev/null 2>&1"
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-
+ynh_print_info "Check settings for installation"
 final_path=/var/www/$app
 test ! -e "$final_path" || ynh_die "This path already contains a folder"
 
@@ -53,22 +54,24 @@ ynh_app_setting_set $app final_path $final_path
 #=================================================
 #INSTALL DEPENDENCIES
 #=================================================
-
+ynh_print_info "Installing dependencies"
 ynh_install_app_dependencies $pkg_dependencies
 
 #install locale (nginx will restart at the end of the install)
 for i in $lang ; do
  ynh_replace_string "# $i" "$i" /etc/locale.gen
 done
+
 locale-gen
 
 #=================================================
 #INSTALL SOURCES
 #===============================================
-# Copy source files
-sudo mkdir -p $final_path
-sudo cp -R ../src/* $final_path
-sudo cp ../conf/index_source.php $final_path/www/index.php
+
+ynh_print_info "Downloading sources to $final_path"
+# Download, check integrity, uncompress and patch the source from app.src
+ynh_setup_source "$final_path"
+cp ../conf/index_source.php $final_path/www/index.php
 ynh_replace_string "Template-exemple" "$domain" $final_path/www/index.php
 
 #Temporaire - mettre en config
@@ -80,13 +83,16 @@ ln -s $final_path/www/template-exemple $final_path/template-exemple
 #===============================================
 #SETTINGS & DATABASE
 #===============================================
+ynh_print_info "Setting database & settings"
 
 #generating random password for database
+ynh_print_OFF
 db_pwd=$(ynh_string_random)
 ynh_app_setting_set $app mysqlpwd $db_pwd
+ynh_print_ON
 
 #configuring with given settings
-sudo cp $final_path/conf-dist.php $final_path/conf.php
+cp $final_path/conf-dist.php $final_path/conf.php
 #Update various conf : domain, database, user and password
 ynh_replace_string "exemple.fr"                  "$domain"                    $final_path/conf.php
 ynh_replace_string "exemple.com"                 "$domain"                    $final_path/conf.php
@@ -97,59 +103,54 @@ ynh_replace_string "//      define('DBUSER',"    "        define('DBUSER',"   $f
 ynh_replace_string "//      define('DBPASS',"    "        define('DBPASS',"   $final_path/conf.php
 ynh_replace_string "baseMysql"                   "$db_user"                   $final_path/conf.php
 ynh_replace_string "utilisateurMysql"            "$db_user"                   $final_path/conf.php
+ynh_print_OFF
 ynh_replace_string "motdepassedefou"             "$db_pwd"                    $final_path/conf.php
 ynh_replace_string "define('ADMIN_PASSWORD', 'admin');" "define('ADMIN_PASSWORD', '$password');" $final_path/conf.php
+ynh_print_ON
 #setting conf file not world-readable (dude, there is a plain-text password !)
-sudo chmod o-r $final_path/conf.php
-
+chmod o-r $final_path/conf.php
 #initialize database (databasename = db_user)
+ynh_print_OFF
 ynh_mysql_create_db $db_user $db_user $db_pwd 
+ynh_print_ON
 
 #setting postfix to use virtual aliases file
-sudo cp $postfix $postfix.emailpoubelle.bak #backup it eventually if that causes some issues
-ynh_replace_string "^virtual_alias_maps" "#virtual_alias_maps" $postfix
-echo  "virtual_alias_maps = hash:$final_path/var/virtual" | sudo tee -a $postfix
+# Add postfix configuration hook and regen postfix conf
+cp -R ../sources/hooks/conf_regen/98-postfix_emailpoubelle /usr/share/yunohost/hooks/conf_regen/
+yunohost service regen-conf postfix
 
 #create the virtual aliases file 
-sudo touch $final_path/var/virtual
-sudo postmap $final_path/var/virtual
-sudo chown -R www-data:www-data $final_path
+touch $final_path/var/virtual
+postmap $final_path/var/virtual
+chown -R www-data:www-data $final_path
 
 #create an alias for deleted junk adresses
-sudo cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
-sudo echo "devnull:/dev/null" | sudo tee -a /etc/aliases
-sudo newaliases
+cp /etc/aliases /etc/aliases.emailpoubelle.bak #backup it 
+echo "devnull:/dev/null" | tee -a /etc/aliases
+newaliases
 
-# Modify Nginx configuration file and copy it to Nginx conf directory
-sudo sed -i "s@YNH_EXAMPLE_PATH@$path_url@g" ../conf/nginx.conf
-sudo sed -i "s@YNH_EXAMPLE_ALIAS@$final_path/@g" ../conf/nginx.conf
-sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+#adding cronjob for removing expired email addresses
+cp -a ../conf/$app.cron /etc/cron.d/$app
+chmod 644 /etc/cron.d/$app
 
-# Handle root path, avoid double slash.
-# Temporary fix, in waiting for an upgrade of the helper. (#361)
-#path_url_slash_less=${path_url%/}
-#ynh_replace_string "__PATH__/" "$path_url_slash_less/" "../conf/nginx.conf"
-#ynh_replace_string "__FINALPATH__/" "$final_path/www" "../conf/nginx.conf"
 # Create a dedicated nginx config
-#ynh_add_nginx_config
+ynh_add_nginx_config
 
-# If app is public, add url to SSOWat conf as skipped_uris
-if [ "$is_public" = "Yes" ];
+#=================================================
+# SETUP SSOWAT
+#=================================================
+
+# Make app public if necessary
+if [ $is_public -eq 1 ]
 then
-sudo yunohost app setting $app skipped_uris -v "/"
+	# unprotected_uris allows SSO credentials to be passed anyway.
+	ynh_app_setting_set $app unprotected_uris "/"
 fi
 
-#A verifier? A integrer dans dépendances?
-#adding php-cli for cron
-sudo apt-get update -qq 
-sudo apt-get install -yqq php5-cli
-#adding cronjob for removing expired email addresses
-sudo echo "$cronline" | sudo tee -a /etc/cron.d/emailpoubelle 
-sudo chmod 644 /etc/cron.d/emailpoubelle 
+#=================================================
+# RELOAD SERVICES
+#=================================================
+ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemd_action --service_name=postfix --action=reload
+service php* reload
 
-# Restart services
-systemctl reload nginx
-systemctl reload postfix
-sudo service php* reload
-sudo yunohost app ssowatconf
- 

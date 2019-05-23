@@ -1,41 +1,52 @@
-emailpoubelle
-=============
-A Yunohost version of Email Poubelle by David Mercereau. All thanks to David. 
-http://www.mercereau.info/sortie-de-la-version-1-0-demailpoubelle-php-email-jetable-auto-hebergeable/
+# Emailpoubelle
 
-Original packaging done by Matlink, https://github.com/matlink/emailpoubelle_ynh
+[![Integration level](https://dash.yunohost.org/integration/emailpoubelle.svg)](https://ci-apps.yunohost.org/jenkins/job/emailpoubelle%20%28Community%29/lastBuild/consoleFull)  
+[![Install emailpoubelle with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=emailpoubelle)
 
-WARNING
-=========
+A Yunohost version of [Email Poubelle](http://www.mercereau.info/sortie-de-la-version-1-0-demailpoubelle-php-email-jetable-auto-hebergeable/) by David Mercereau.
+
+EmailPoubelle (Trash email) is a script to create temporay email adresses that aims to your real email address
+
+All thanks to David. 
+
+## WARNING
+
 Using this will cause to disable the Yunohost ldap aliases ! Once installed, you won't be able to use the aliasses settings that you can see when you modify your personnal settings in the SSOWAT pannel.
 Of course, once uninstalled, everything get back to normal. 
 
-TODO : 
-------
-[X] move to 2.0
+## Links
 
-[ ] check nginx conf
+ * Report a bug: https://github.com/YunoHost-Apps/emailpoubelle_ynh/issues
+ * App website: https://github.com/kepon85/emailPoubelle.php
+ * YunoHost website: https://yunohost.org/
 
-[X] insert clean index.php
+---
 
-[ ] insert cron in conf
+Developers info
+----------------
 
-[ ] insert symlink for langages in /lang
+Please do your pull request to the [testing branch](https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing).
 
-[X] check dependency for lang
+To try the testing branch, please proceed like that.
+```
+sudo yunohost app install https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing --debug
+or
+sudo yunohost app upgrade emailpoubelle -u https://github.com/Yunohost-Apps/emailpoubelle_ynh/tree/Testing --debug
+```
 
-[X] remove php-geoip 
+## TODO : 
 
-[ ] remove new locale on remove
+- [X] check nginx conf
+- [X] insert cron in conf
+- [ ] insert symlink for langages in /lang
+- [ ] remove new locale on remove
+- [ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
+- [X] cron job to remove redirections (`0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) 
+- [ ] conflict with SSOWAT + non-public app
+- [X] package_check integration
+- [ ] Multiinstance
+- [ ] LDAP
 
-[X] Why the flag don't show??
+## LICENCE
 
-[X] Implement Admin panel
-
-[X] Add backup restore script
-
-[ ] check checksum on download
-
-[ ] Test it ! (and check if that doesn't interfer with postfix and its aliases)
-
-[ ] cron job to remove redirections (0 */2 * * * /usr/bin/wget -q -t 1 -T 7200 -O /dev/null 'https://domain/poubelle/index.php?act=cron' >/dev/null 2>&1) conflict with SSOWAT + non-public app
+Package and software are GPL 3.0
